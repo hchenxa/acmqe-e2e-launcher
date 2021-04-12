@@ -14,5 +14,9 @@ function setup_jq() {
 }
 
 function setup_oc {
-    echo "setup the oc client here"
+    command -v oc 2> /dev/null
+    if [[ $? -ne 0 ]]; then
+        curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
+        tar xvf openshift-client-linux.tar.gz
+    fi
 }

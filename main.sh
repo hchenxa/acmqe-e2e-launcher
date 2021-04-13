@@ -17,15 +17,18 @@ if [[ $(jq -r ".acm_versions[].version == $ACM_VERSION" config/environment.json 
 fi
 
 supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
-echo "the supported hub type is $supported_hub_type"
-export IPS=","
+echo "The supported hub type is $supported_hub_type"
+OLD_IFS="$IFS"
+IFS=","
+array=($supported_hub_type)
+IFS="$OLD_IFS"
 
 source utils/gen_context.sh
-for type in $supported_hub_type
+for type in ${array[@]}
 do
-    # Get the username and password from the environment variable here.
+    # Get the username and password from the environment variable here, and the supported format should like AWS_23_USERNAME and AWS_23_PASSWORD
 
-    url=$(jq -r ".acm_versions[]|select(.version == \"$ACM_VERSION\") | .envs[] | select(.type == \"$type\") | .ocp_route" config/environment.json)
+    url=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION) | .envs[] | select(.type == \"$type\") | .ocp_route" config/environment.json)
     generate_context $username $passwd --server=$url $type $ACM_VERSION
 done
 

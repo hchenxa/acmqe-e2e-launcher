@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
+source utils/helper.sh
+
 export TEST_SNAPSHOT=${TEST_SNAPSHOT:-latest}
 export ACM_VERSION=${ACM_VERSION:-2.3}
 
 # This variable will be ready from jenkins configuration, and the value will be like "aws,azure,gcp,roks", so need to split the ',' here as well
-export ACM_HUB_TYPE=${ACM_HUB_TYPE:-aws}
+export ACM_HUB_TYPE=${ACM_HUB_TYPE:-AWS}
 
 if [[ -z $ACM_VERSION ]]; then
     echo "Please set ACM_VERSION environment variable before running the scripts"
@@ -20,14 +22,18 @@ supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.en
 echo "The supported hub type is $supported_hub_type"
 OLD_IFS="$IFS"
 IFS=","
-array=($supported_hub_type)
+_type=$(phase_type $ACM_HUB_TYPE)
+array=($_type)
 IFS="$OLD_IFS"
+
+_version=$(phase_version $ACM_VERSION)
 
 source utils/gen_context.sh
 for type in ${array[@]}
 do
     # Get the username and password from the environment variable here, and the supported format should like AWS_23_USERNAME and AWS_23_PASSWORD
-
+    username=${type}_${_version}_USERNAME
+    passwd=${type}_${_version}_PASSWORD
     url=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION) | .envs[] | select(.type == \"$type\") | .ocp_route" config/environment.json)
     generate_context $username $passwd --server=$url $type $ACM_VERSION
 done

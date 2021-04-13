@@ -4,22 +4,22 @@
          "version": 2.3,
          "envs": [
             {
-               "type": "azure",
+               "type": "AZURE",
                "ocp_route": "https://api.ocp4-az-3.az.dev06.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.ocp4-az-3.az.dev06.red-chesterfield.com/"
             },
             {
-               "type": "rosa",
+               "type": "ROSA",
                "ocp_route": "https://api.rosa-acmqe3.bz1q.p1.openshiftapps.com:6443",
                "acm_route": "https://multicloud-console.apps.rosa-acmqe3.bz1q.p1.openshiftapps.com/"
             },
             {
-               "type": "aro",
+               "type": "ARO",
                "ocp_route": "https://api.qe2-aro.acm-dev06.azure.devcluster.openshift.com:6443",
                "acm_route": "https://multicloud-console.apps.qe2-aro.acm-dev06.azure.devcluster.openshift.com/"
             },
             {
-               "type": "vmware",
+               "type": "VMWARE",
                "ocp_route": "https://api.qe3-vmware-pkt.dev02.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.qe3-vmware-pkt.dev02.red-chesterfield.com/"
             }
@@ -29,27 +29,27 @@
          "version": 2.2,
          "envs": [
             {
-               "type": "aws",
+               "type": "AWS",
                "ocp_route": "https://api.ocp45-aws.dev09.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.ocp45-aws.dev09.red-chesterfield.com/"
             },
             {
-               "type": "azure",
+               "type": "AZURE",
                "ocp_route": "https://api.ocp4-az-2.az.dev06.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.ocp4-az-2.az.dev06.red-chesterfield.com/"
             },
             {
-               "type": "gcp",
+               "type": "GCP",
                "ocp_route": "https://api.ocp4-gcp-2.gcp.dev09.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.ocp4-gcp-2.gcp.dev09.red-chesterfield.com/"
             },
             {
-               "type": "aro",
+               "type": "ARO",
                "ocp_route": "https://api.qe1-aro.acm-dev06.azure.devcluster.openshift.com:6443",
                "acm_route": "https://multicloud-console.apps.qe1-aro.acm-dev06.azure.devcluster.openshift.com/"
             },
             {
-               "type": "osd",
+               "type": "OSD",
                "ocp_route": "https://api.acmqeosd.y0wn.p1.openshiftapps.com:6443",
                "acm_route": "https://multicloud-console.apps.acmqeosd.y0wn.p1.openshiftapps.com/"
             }
@@ -59,22 +59,22 @@
          "version": 2.1,
          "envs": [
             {
-               "type": "vmware",
+               "type": "VMWARE",
                "ocp_route": "https://api.qe2-vmware-pkt.dev02.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.qe2-vmware-pkt.dev02.red-chesterfield.com/"
             },
             {
-               "type": "aws",
+               "type": "AWS",
                "ocp_route": "https://api.ocp46-aws.dev09.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.ocp46-aws.dev09.red-chesterfield.com/"
             },
             {
-               "type": "azure",
+               "type": "AZURE",
                "ocp_route": "https://api.ocp4-az-1.az.dev06.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.ocp4-az-1.az.dev06.red-chesterfield.com/"
             },
             {
-               "type": "gcp",
+               "type": "GCP",
                "ocp_route": "https://api.ocp45-gcp.gcp.dev09.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.ocp45-gcp.gcp.dev09.red-chesterfield.com/"
             }
@@ -84,12 +84,12 @@
          "version": 2.0,
          "envs": [
             {
-               "type": "azure",
+               "type": "AZURE",
                "ocp_route": "https://api.ocp45-az.az.dev06.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.ocp45-az.az.dev06.red-chesterfield.com/"
             },
             {
-               "type": "gcp",
+               "type": "GCP",
                "ocp_route": "https://api.ocp46-gcp.gcp.dev09.red-chesterfield.com:6443",
                "acm_route": "https://multicloud-console.apps.ocp46-gcp.gcp.dev09.red-chesterfield.com/"
             }

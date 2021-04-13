@@ -28,3 +28,10 @@ function phase_type() {
     old_type=$1
     echo $old_type|tr 'a-z' 'A-Z'
 }
+
+function get_basedomain() {
+    # Used to get the cluster base domain
+    acm_version=$1
+    cluster_type=$2
+    echo $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+}

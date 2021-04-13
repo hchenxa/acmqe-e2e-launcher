@@ -23,7 +23,9 @@ export IPS=","
 source utils/gen_context.sh
 for type in $supported_hub_type
 do
-    url=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json)
+    # Get the username and password from the environment variable here.
+
+    url=$(jq -r ".acm_versions[]|select(.version == \"$ACM_VERSION\") | .envs[] | select(.type == \"$type\") | .ocp_route" config/environment.json)
     generate_context $username $passwd --server=$url $type $ACM_VERSION
 done
 

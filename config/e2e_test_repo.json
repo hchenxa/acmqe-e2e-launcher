@@ -43,7 +43,7 @@
             "image": "grc-policy-framework-tests"
         },
         {
-            "repo_path": "https://github.com/open-cluster-management/observability-e2e-test",
+            "repo_path": "",
             "enabled": false,
             "squad": "ui",
             "image": "console-ui-tests"

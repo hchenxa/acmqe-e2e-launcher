@@ -36,7 +36,29 @@ do
     passwd=${type}_${_version}_PASSWORD
     url=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION) | .envs[] | select(.type == \"$type\") | .ocp_route" config/environment.json)
     generate_context $username $passwd --server=$url $type $ACM_VERSION
+
+    # Generate the imported cluster context
+    # First need to check to see if the cluster have imported cluster or not
+    _managed_cluster=$(KUBECONFIG=env_context/${type}_${ACM_VERSION}/kubeconfig oc get managedcluster --no-headers --ignore-not-found | awk '{print $1}')
+    if [[ $(echo $_managed_cluster | wc -l | sed 's/\ /,/g' ) == 0 ]]; then
+        echo "No imported cluster found, please try to import a managed cluster first and rerun the test"
+        exit 1
+    elif [[ $(echo $_managed_cluster | wc -l | sed 's/\ /,/g' ) == 1 ]]; then
+        generate_importcluster_context $_managed_cluster
+    else
+        for mc in $_managed_cluster
+        do
+            if [[ $mc == "local-cluster" ]]; then
+                continue
+            else
+                # (TODO) Will filter out the unavailable cluster later
+                generate_importcluster_context $mc
+                break
+            fi
+        done
+    fi
 done
+
 
 
 # (TODO) Can have a for loop here to run the generate_context, run_test, generate_report

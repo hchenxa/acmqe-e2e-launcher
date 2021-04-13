@@ -1,0 +1,52 @@
+{
+    "repos": [
+        {
+            "repo_path": "https://github.com/open-cluster-management/observability-e2e-test",
+            "enabled": false,
+            "squad": "observability",
+            "image": "observability-e2e-test"
+        },
+        {
+            "repo_path": "https://github.com/open-cluster-management/search-e2e-test",
+            "enabled": false,
+            "squad": "search",
+            "image": "search-e2e"
+        },
+        {
+            "repo_path": "https://github.com/open-cluster-management/applifecycle-backend-e2e",
+            "enabled": false,
+            "squad": "app",
+            "image": "applifecycle-backend-e2e"
+        },
+        {
+            "repo_path": "https://github.com/open-cluster-management/cluster-lifecycle-e2e",
+            "enabled": false,
+            "squad": "clc",
+            "image": "cluster-lifecycle-e2e"
+        },
+        {
+            "repo_path": "https://github.com/open-cluster-management/mcm-kui-tests",
+            "enabled": false,
+            "squad": "kui",
+            "image": "kui-web-terminal-tests"
+        },
+        {
+            "repo_path": "",
+            "enabled": false,
+            "squad": "grc",
+            "image": "grc-ui-tests"
+        },
+        {
+            "repo_path": "",
+            "enabled": false,
+            "squad": "grc",
+            "image": "grc-policy-framework-tests"
+        },
+        {
+            "repo_path": "https://github.com/open-cluster-management/observability-e2e-test",
+            "enabled": false,
+            "squad": "ui",
+            "image": "console-ui-tests"
+        }
+    ]
+}

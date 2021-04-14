@@ -14,9 +14,9 @@ function run_test() {
             $DOCKER run \
             --network host \
             --env BROWSER="firefox" \
-            --volume env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
-            --volume results:/results \
-            --volume env_context/${env_type}_${cluster_version}/${test_type}/options.yaml:/resources/options.yaml \
+            --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
+            --volume $(pwd)/results:/results \
+            --volume $(pwd)/env_context/${env_type}_${cluster_version}/${test_type}/options.yaml:/resources/options.yaml \
             quay.io/open-cluster-management/kui-web-terminal-tests:$TEST_SNAPSHOT
             ;;
     esac

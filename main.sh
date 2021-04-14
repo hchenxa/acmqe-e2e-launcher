@@ -39,6 +39,8 @@ if [[ -z $QUAY_USERNAME || -z $QUAY_PASSWORD ]]; then
     exit 1
 fi
 
+$DOCKER login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io/open-cluster-management
+
 supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
 echo "The supported hub type is $supported_hub_type"
 OLD_IFS="$IFS"

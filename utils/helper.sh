@@ -25,7 +25,7 @@ function phase_version() {
 
 function phase_type() {
     # Used to translet the type to upper.
-    old_type=$1
+    old_type=$*
     echo $old_type|tr 'a-z' 'A-Z'
 }
 

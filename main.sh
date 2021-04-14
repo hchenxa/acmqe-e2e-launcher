@@ -58,8 +58,6 @@ do
         done
     fi
     _base_domain=$(get_basedomain ${type} ${ACM_VERSION})
-    echo $_username
-    echo $_passwd
     _id_provider=$(get_idprovider ${type} ${ACM_VERSION})
     generate_options ${type} ${ACM_VERSION} ${_base_domain} KUI $(eval echo '$'"$_username") $(eval echo '$'"$_passwd") $_id_provider
 done

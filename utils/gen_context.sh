@@ -35,16 +35,33 @@ function generate_options() {
     env_type=$1
     cluster_version=$2
     baseDomain=$3
+    test_type=$4
+    username=$5
+    password=$6
+    id_provider=$7
 
-    cat << EOF > env_context/options.yaml
+    echo "Generate the options.yaml for ${test_type}"
+    mkdir -p env_context/${env_type}_${cluster_version}/${test_type}
+
+    case $test_type in
+        SEARCH)
+            cat << EOF > env_context/${env_type}_${cluster_version}/${test_type}/options.yaml
 options:
   hub:
-    baseDomain:
-    grafanaURL:
-  clusters:
-  - name:
-    baseDomain:
-    kubecontext:
+    baseDomain: $baseDomain
+    user: $username
+    password: $password
 EOF
-
+            ;;
+        KUI)
+            cat << EOF > env_context/${env_type}_${cluster_version}/${test_type}/options.yaml
+options:
+  identityProvider: $id_provider
+  hub:
+    baseDomain: $baseDomain
+    user: $username
+    password: $password
+EOF
+            ;;
+    esac
 }

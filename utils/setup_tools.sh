@@ -10,7 +10,15 @@ function setup_container_client() {
 }
 
 function setup_jq() {
-    echo "setup the jq here"
+    command -v jq &> /dev/null; then
+    if [[ $? -ne 0 ]]; then
+     if [[ "$(uname)" == "Darwin" ]]; then
+        curl -o jq -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64
+     elif [[ "$(uname)" == "Linux" ]]; then
+        curl -o jq -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+     fi
+    chmod +x ./jq && mv ./jq /usr/local/bin/
+   fi
 }
 
 function setup_oc {

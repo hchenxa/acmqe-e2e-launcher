@@ -25,7 +25,11 @@ function generate_importcluster_context() {
         cp env_context/${env_type}_${cluster_version}/kubeconfig env_context/${env_type}_${cluster_version}/imported_kubeconfig
     else
         secret_name=$(KUBECONFIG=env_context/${env_type}_${cluster_version}/kubeconfig oc get secret -n $namespace | awk '{print $1}' | grep "^$namespace.*admin-kubeconfig$")
-        KUBECONFIG=env_context/${env_type}_${cluster_version}/kubeconfig oc get secret -n $namespace $secret_name --template={{.data.kubeconfig}} | base64 -D > env_context/${env_type}_${cluster_version}/imported_kubeconfig
+        if [[ $(uname -s) == "Darwin" ]]; then
+            KUBECONFIG=env_context/${env_type}_${cluster_version}/kubeconfig oc get secret -n $namespace $secret_name --template={{.data.kubeconfig}} | base64 -D > env_context/${env_type}_${cluster_version}/imported_kubeconfig
+        else
+            KUBECONFIG=env_context/${env_type}_${cluster_version}/kubeconfig oc get secret -n $namespace $secret_name --template={{.data.kubeconfig}} | base64 -d > env_context/${env_type}_${cluster_version}/imported_kubeconfig
+        fi
         echo "apiVersion: v1" >> env_context/${env_type}_${cluster_version}/imported_kubeconfig
     fi
 }

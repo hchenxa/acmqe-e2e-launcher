@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export DOCKER=${DOCKER:-podman}
+export DOCKER=${DOCKER:-docker}
 
 function setup_container_client() {
     command -v $DOCKER 2>/dev/null
@@ -10,7 +10,7 @@ function setup_container_client() {
 }
 
 function setup_jq() {
-    command -v jq &> /dev/null; then
+    command -v jq &> /dev/null
     if [[ $? -ne 0 ]]; then
      if [[ "$(uname)" == "Darwin" ]]; then
         curl -o jq -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64

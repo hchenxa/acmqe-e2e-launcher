@@ -7,14 +7,14 @@ function get_supported_type() {
 }
 
 function get_ocp_route() {
-    acm_version=$1
-    cluster_type=$2
+    cluster_type=$1
+    acm_version=$2
     return ocp_version=$(jq -r ".acm_versions[]|select(.version == $acm_version)|.envs[]|select(.type== "$cluster_type")|ocp_route" config/environment.json)
 }
 
 function get_acm_route() {
-    acm_version=$1
-    cluster_type=$2
+    cluster_type=$1
+    acm_version=$2
     return acm_version=$(jq -r ".acm_versions[]|select(.version == $acm_version)|.envs[]|select(.type== "$cluster_type")|acm_route" config/environment.json)   
 }
 
@@ -31,7 +31,13 @@ function phase_type() {
 
 function get_basedomain() {
     # Used to get the cluster base domain
-    acm_version=$1
-    cluster_type=$2
+    cluster_type=$1
+    acm_version=$2
     echo $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+}
+
+function get_idprovider() {
+    cluster_type=$1
+    acm_version=$2
+    echo $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc whoami)
 }

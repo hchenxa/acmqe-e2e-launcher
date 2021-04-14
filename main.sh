@@ -32,10 +32,10 @@ source utils/gen_context.sh
 for type in ${array[@]}
 do
     # Get the username and password from the environment variable here, and the supported format should like AWS_23_USERNAME and AWS_23_PASSWORD
-    username=${type}_${_version}_USERNAME
-    passwd=${type}_${_version}_PASSWORD
+    _username=${type}_${_version}_USERNAME
+    _passwd=${type}_${_version}_PASSWORD
     url=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION) | .envs[] | select(.type == \"$type\") | .ocp_route" config/environment.json)
-    generate_context $(eval echo '$'"$username") $(eval echo '$'"$passwd") --server=$url $type $ACM_VERSION
+    generate_context $(eval echo '$'"$_username") $(eval echo '$'"$_passwd") --server=$url $type $ACM_VERSION
 
     # Generate the imported cluster context
     # First need to check to see if the cluster have imported cluster or not
@@ -57,7 +57,9 @@ do
             fi
         done
     fi
-    _base_domain=$(get_basedomain ${ACM_VERSION} ${type})
+    _base_domain=$(get_basedomain ${type} ${ACM_VERSION})
+    _id_provider=$(get_idprovider ${type} ${ACM_VERSION})
+    generate_options ${type} ${ACM_VERSION} ${_base_domain} KUI $(eval echo '$'"$_username") $(eval echo '$'"$_passwd") $_id_provider
 done
 
 

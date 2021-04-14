@@ -33,7 +33,8 @@ function get_basedomain() {
     # Used to get the cluster base domain
     cluster_type=$1
     acm_version=$2
-    echo $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+    route_console=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+    echo ${route_console#*apps.}
 }
 
 function get_idprovider() {

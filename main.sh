@@ -8,8 +8,16 @@ export ACM_VERSION=${ACM_VERSION:-2.3}
 # This variable will be ready from jenkins configuration, and the value will be like "aws,azure,gcp,roks", so need to split the ',' here as well
 export ACM_HUB_TYPE=${ACM_HUB_TYPE:-AWS}
 
+# This variable will be ready from jenkins configuration, and the value will be like "kui,search,observability", so need to split the ',' here as well
+export ACM_TEST_GROUP=${ACM_TEST_GROUP:-}
+
 if [[ -z $ACM_VERSION ]]; then
     echo "Please set ACM_VERSION environment variable before running the scripts"
+    exit 1
+fi
+
+if [[ -z $ACM_TEST_GROUP ]]; then
+    echo "Please set ACM_TEST_GROUP environment variable before running the scripts"
     exit 1
 fi
 
@@ -23,13 +31,15 @@ echo "The supported hub type is $supported_hub_type"
 OLD_IFS="$IFS"
 IFS=","
 _type=$(phase_type $ACM_HUB_TYPE)
-array=($_type)
+_test_case=$(phase_type $ACM_TEST_GROUP)
+type_array=($_type)
+typecase_array=($_test_case)
 IFS="$OLD_IFS"
 
 _version=$(phase_version $ACM_VERSION)
 
 source utils/gen_context.sh
-for type in ${array[@]}
+for type in ${type_array[@]}
 do
     # Get the username and password from the environment variable here, and the supported format should like AWS_23_USERNAME and AWS_23_PASSWORD
     _username=${type}_${_version}_USERNAME
@@ -59,7 +69,10 @@ do
     fi
     _base_domain=$(get_basedomain ${type} ${ACM_VERSION})
     _id_provider=$(get_idprovider ${type} ${ACM_VERSION})
-    generate_options ${type} ${ACM_VERSION} ${_base_domain} KUI $(eval echo '$'"$_username") $(eval echo '$'"$_passwd") $_id_provider
+    for tc in ${typecase_array[@]}
+    do
+        generate_options ${type} ${ACM_VERSION} ${_base_domain} $tc $(eval echo '$'"$_username") $(eval echo '$'"$_passwd") $_id_provider
+    done
 done
 
 

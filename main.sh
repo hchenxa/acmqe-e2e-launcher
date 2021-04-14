@@ -20,6 +20,7 @@ export DOCKER=${DOCKER:-docker}
 export QUAY_USERNAME=${QUAY_USERNAME:-}
 export QUAY_PASSWORD=${QUAY_PASSWORD:-}
 
+setup_jq
 if [[ -z $ACM_VERSION ]]; then
     echo "Please set ACM_VERSION environment variable before running the scripts"
     exit 1
@@ -41,7 +42,7 @@ if [[ -z $QUAY_USERNAME || -z $QUAY_PASSWORD ]]; then
 fi
 
 $DOCKER login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io/open-cluster-management
-setup_jq
+
 supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
 echo "The supported hub type is $supported_hub_type"
 OLD_IFS="$IFS"

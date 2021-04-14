@@ -42,6 +42,10 @@ if [[ -z $QUAY_USERNAME || -z $QUAY_PASSWORD ]]; then
 fi
 
 $DOCKER login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io/open-cluster-management
+if [[ $? -ne 0 ]]; then
+    echo "can not login quay.io with the username and password you provided"
+    exit 1
+fi
 
 supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
 echo "The supported hub type is $supported_hub_type"

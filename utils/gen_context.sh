@@ -32,6 +32,7 @@ function generate_importcluster_context() {
         fi
         echo "apiVersion: v1" >> env_context/${env_type}_${cluster_version}/imported_kubeconfig
     fi
+    echo -n "$namespace" > env_context/${env_type}_${cluster_version}/managed_cluster_name
 }
 
 function generate_options() {

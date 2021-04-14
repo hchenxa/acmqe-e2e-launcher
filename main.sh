@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 source utils/helper.sh
+source utils/run_test.sh
 
 export TEST_SNAPSHOT=${TEST_SNAPSHOT:-latest}
 export ACM_VERSION=${ACM_VERSION:-2.3}
@@ -11,8 +12,20 @@ export ACM_HUB_TYPE=${ACM_HUB_TYPE:-AWS}
 # This variable will be ready from jenkins configuration, and the value will be like "kui,search,observability", so need to split the ',' here as well
 export ACM_TEST_GROUP=${ACM_TEST_GROUP:-}
 
+# This variable will be ready from jenkins configuration, and the value will be like "docker" or "podman"
+export DOCKER=${DOCKER:-docker}
+
+# This variable will be ready from jenkins configuration which used to pull docker images from quay.io
+export QUAY_USERNAME=${QUAY_USERNAME:-}
+export QUAY_PASSWORD=${QUAY_PASSWORD:-}
+
 if [[ -z $ACM_VERSION ]]; then
     echo "Please set ACM_VERSION environment variable before running the scripts"
+    exit 1
+fi
+
+if [[ $(jq -r ".acm_versions[].version == $ACM_VERSION" config/environment.json | grep true | wc -l | sed 's/^ *//') == 0 ]]; then
+    echo "can not find the supported ACM_VERSION:$ACM_VERSION, please try to correct the version that the automation supported"
     exit 1
 fi
 
@@ -21,8 +34,8 @@ if [[ -z $ACM_TEST_GROUP ]]; then
     exit 1
 fi
 
-if [[ $(jq -r ".acm_versions[].version == $ACM_VERSION" config/environment.json | grep true | wc -l | sed 's/^ *//') == 0 ]]; then
-    echo "can not find the supported ACM_VERSION:$ACM_VERSION, please try to correct the version that the automation supported"
+if [[ -z $QUAY_USERNAME || -z $QUAY_PASSWORD ]]; then
+    echo "Please set QUAY_USERNAME and QUAY_PASSWORD environment variable before running the scripts"
     exit 1
 fi
 
@@ -72,19 +85,9 @@ do
     for tc in ${typecase_array[@]}
     do
         generate_options ${type} ${ACM_VERSION} ${_base_domain} $tc $(eval echo '$'"$_username") $(eval echo '$'"$_passwd") $_id_provider
+        run_test ${type} ${ACM_VERSION} $tc
     done
 done
-
-
-
-# (TODO) Can have a for loop here to run the generate_context, run_test, generate_report
-
-# The function will generate the cluster context
-# source utils/gen_context.sh
-# generate_context
-
-# # The function will run test on each of clusters
-# run_test
 
 # # The function will generate the report
 # generate_report

@@ -65,10 +65,10 @@ do
     # Generate the imported cluster context
     # First need to check to see if the cluster have imported cluster or not
     _managed_cluster=$(KUBECONFIG=env_context/${type}_${ACM_VERSION}/kubeconfig oc get managedcluster --no-headers --ignore-not-found | awk '{print $1}')
-    if [[ $(echo $_managed_cluster | wc -l | sed 's/\ /,/g' ) == 0 ]]; then
+    if [[ $(echo "$_managed_cluster" | wc -l | sed 's/\ /,/g' ) == 0 ]]; then
         echo "No imported cluster found, please try to import a managed cluster first and rerun the test"
         exit 1
-    elif [[ $(echo $_managed_cluster | wc -l | sed 's/\ /,/g' ) == 1 ]]; then
+    elif [[ $(echo "$_managed_cluster" | wc -l | sed 's/\ /,/g' ) == 1 ]]; then
         generate_importcluster_context ${_managed_cluster} ${type} ${ACM_VERSION}
     else
         for mc in $_managed_cluster

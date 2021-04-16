@@ -24,7 +24,7 @@ function run_test() {
         KUI)
             sudo $DOCKER run \
             --network host \
-            --env BROWSER="chrome" \
+            --env BROWSER="firefox" \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
             --volume $result_path/:/results \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/${test_type}/options.yaml:/resources/options.yaml \

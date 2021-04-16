@@ -4,6 +4,7 @@ function run_test() {
     env_type=$1
     cluster_version=$2
     test_type=$3
+    result_path="$(pwd)/results/$4/${env_type}_${cluster_version}/"
 
     echo "Start the running $test_type cases..."
 
@@ -13,40 +14,53 @@ function run_test() {
             --network host \
             --dns 8.8.8.8 \
             --dns 8.8.4.4 \
+            -e BROWSER="chrome" \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/imported_kubeconfig:/opt/.kube/import-kubeconfig \
-            --volume $(pwd)/results:/results \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/${test_type}/options.yaml:/resources/options.yaml \
+            --volume $result_path/:/results \
             quay.io/open-cluster-management/search-e2e:$TEST_SNAPSHOT
             ;;
         KUI)
             sudo $DOCKER run \
             --network host \
-            --env BROWSER="firefox" \
+            --env BROWSER="chrome" \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
-            --volume $(pwd)/results:/results \
+            --volume $result_path/:/results \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/${test_type}/options.yaml:/resources/options.yaml \
             quay.io/open-cluster-management/kui-web-terminal-tests:$TEST_SNAPSHOT
             ;;
-        GRC_UI)
+        "GRC_UI")
+            $DOCKER run \
+            --volume $result_path/results:/opt/app-root/src/grc-ui/test-output/e2e \
+            --volume $result_path/results-cypress:/opt/app-root/src/grc-ui/test-output/cypress \
+            --env OC_CLUSTER_URL="https://api.${HUB_BASEDOMAIN}:6443" \
+            --env OC_CLUSTER_PASS="${HUB_PASSWORD}" \
+            --env OC_CLUSTER_USER="${HUB_USERNAME}" \
+            --env RBAC_PASS="${RBAC_PASS}" \
+            --env CYPRESS_STANDALONE_TESTSUITE_EXECUTION=FALSE \
+            --env MANAGED_CLUSTER_NAME="import-${TRAVIS_BUILD_ID}" \
+            quay.io/open-cluster-management/grc-ui-tests:${TEST_SNAPSHOT}
             ;;
-        GRC_FRAMEWORK)
+        "GRC_FRAMEWORK")
             managed_cluster_name=$(cat env_context/${env_type}_${cluster_version}/managed_cluster_name)
             sudo $DOCKER run \
             --network host \
-            --volume $(pwd)/results:/go/src/github.com/open-cluster-management/governance-policy-framework/test-output \
+            --volume $result_path/:/go/src/github.com/open-cluster-management/governance-policy-framework/test-output \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_hub \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/imported_kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_managed \
             --env MANAGED_CLUSTER_NAME="$managed_cluster_name" \
             quay.io/open-cluster-management/grc-policy-framework-tests:$TEST_SNAPSHOT
             ;;
-        CONSOLE_UI)
+        "CONSOLE_UI")
             ;;
-        CLUSTER_LIFECYCLE)
+        "CLUSTER_LIFECYCLE")
             ;;
-        APP_UI)
+        "APP_UI")
             ;;
-        APP_BACKEND)
+        "APP_BACKEND")
+            ;;
+        "OBSERVABILITY")
             ;;
     esac
 

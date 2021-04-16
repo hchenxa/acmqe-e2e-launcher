@@ -5,7 +5,7 @@ source utils/run_test.sh
 source utils/setup_tools.sh
 
 # This variable was used to check if the job was using user environment, if yes, user need to provide the login creds.
-export USER_ENV=${$USER_ENV:-false}
+export USER_ENV=${USER_ENV:-false}
 
 export TEST_SNAPSHOT=${TEST_SNAPSHOT:-latest}
 export ACM_VERSION=${ACM_VERSION:-2.3}
@@ -20,7 +20,7 @@ export ACM_TEST_GROUP=${ACM_TEST_GROUP:-}
 export DOCKER=${DOCKER:-docker}
 
 # This variable will be ready from jenkins configuration which used to pull docker images from quay.io
-export QUAY_USERNAME=${QUAY_USERNAME:-kubeadmin}
+export QUAY_USERNAME=${QUAY_USERNAME:-}
 export QUAY_PASSWORD=${QUAY_PASSWORD:-}
 
 # This variable was used for current report test, will be removed later.
@@ -68,8 +68,7 @@ IFS="$OLD_IFS"
 
 _version=$(phase_version $ACM_VERSION)
 
-# _timestamp=$(date "+%Y%m%d%H%M")
-_timestamp="202104151650"
+_timestamp=$(date "+%Y%m%d%H%M")
 
 source utils/gen_context.sh
 for type in ${type_array[@]}

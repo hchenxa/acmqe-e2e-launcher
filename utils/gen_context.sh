@@ -61,7 +61,6 @@ EOF
         KUI)
             cat << EOF > env_context/${env_type}_${cluster_version}/${test_type}/options.yaml
 options:
-  identityProvider: $id_provider
   hub:
     baseDomain: $baseDomain
     user: $username

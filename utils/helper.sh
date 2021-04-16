@@ -42,3 +42,16 @@ function get_idprovider() {
     acm_version=$2
     echo $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc whoami)
 }
+
+function check_imported_cluster() {
+    cluster_type=$1
+    acm_version=$2
+    cluster_namespace=$3
+    if [[ $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get clusterdeployment -n $cluster_namespace | wc -l | sed 's/^ *//') == 0 ]]; then
+        # If no clusterdeployment exists in the namespace, that means the cluster was imported.
+        echo "false"
+    else
+        # If there have clusterdeployment exists in the namespace, that means the cluster was created by hive.
+        echo "true"
+    fi
+}

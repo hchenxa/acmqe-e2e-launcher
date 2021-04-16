@@ -20,7 +20,10 @@ export DOCKER=${DOCKER:-docker}
 export QUAY_USERNAME=${QUAY_USERNAME:-}
 export QUAY_PASSWORD=${QUAY_PASSWORD:-}
 
+setup_oc
 setup_jq
+setup_container_client
+
 if [[ -z $ACM_VERSION ]]; then
     echo "Please set ACM_VERSION environment variable before running the scripts"
     exit 1
@@ -41,7 +44,7 @@ if [[ -z $QUAY_USERNAME || -z $QUAY_PASSWORD ]]; then
     exit 1
 fi
 
-$DOCKER login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io/open-cluster-management
+sudo $DOCKER login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io/open-cluster-management
 if [[ $? -ne 0 ]]; then
     echo "can not login quay.io with the username and password you provided"
     exit 1

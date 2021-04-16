@@ -9,7 +9,7 @@ function run_test() {
 
     case $test_type in
         SEARCH)
-            $DOCKER run \
+            sudo $DOCKER run \
             --network host \
             --dns 8.8.8.8 \
             --dns 8.8.4.4 \
@@ -20,7 +20,7 @@ function run_test() {
             quay.io/open-cluster-management/search-e2e:$TEST_SNAPSHOT
             ;;
         KUI)
-            $DOCKER run \
+            sudo $DOCKER run \
             --network host \
             --env BROWSER="firefox" \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
@@ -32,7 +32,7 @@ function run_test() {
             ;;
         GRC_FRAMEWORK)
             managed_cluster_name=$(cat env_context/${env_type}_${cluster_version}/managed_cluster_name)
-            $DOCKER run \
+            sudo $DOCKER run \
             --network host \
             --volume $(pwd)/results:/go/src/github.com/open-cluster-management/governance-policy-framework/test-output \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_hub \

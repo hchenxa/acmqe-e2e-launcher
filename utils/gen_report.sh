@@ -10,7 +10,18 @@ function generate_slack() {
 }
 
 function push_report() {
-    _timestamp=$1
+    if [[ -z $GITHUB_TOKEN ]]; then
+        echo "Push report requied the GITHUB_TOKEN"
+        exit
+    fi
+    _report_location=$1
     echo "Push the report to github"
-    
+    git clone --single-branch --branch main https://${GITHUB_TOKEN}@github.com/hchenxa/report.git /tmp/report
+    cp -r $_report_location /tmp/report/
+    pushd /tmp/report
+    git add $(basename $_report_location)
+    git status
+    git diff-index --quiet HEAD || git commit -am "Save Regression Results ${_report_location}"
+    git push
+    popd
 }

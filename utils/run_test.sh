@@ -9,7 +9,7 @@ function run_test() {
     echo "Start the running $test_type cases..."
 
     case $test_type in
-        SEARCH)
+        "SEARCH")
             sudo $DOCKER run \
             --network host \
             --dns 8.8.8.8 \
@@ -21,7 +21,7 @@ function run_test() {
             --volume $result_path/:/results \
             quay.io/open-cluster-management/search-e2e:$TEST_SNAPSHOT
             ;;
-        KUI)
+        "KUI")
             sudo $DOCKER run \
             --network host \
             --env BROWSER="firefox" \
@@ -31,7 +31,7 @@ function run_test() {
             quay.io/open-cluster-management/kui-web-terminal-tests:$TEST_SNAPSHOT
             ;;
         "GRC_UI")
-            $DOCKER run \
+            sudo $DOCKER run \
             --volume $result_path/results:/opt/app-root/src/grc-ui/test-output/e2e \
             --volume $result_path/results-cypress:/opt/app-root/src/grc-ui/test-output/cypress \
             --env OC_CLUSTER_URL="https://api.${HUB_BASEDOMAIN}:6443" \
@@ -53,12 +53,26 @@ function run_test() {
             quay.io/open-cluster-management/grc-policy-framework-tests:$TEST_SNAPSHOT
             ;;
         "CONSOLE_UI")
+            sudo $DOCKER run \
+            --volume $result_path:/results \
+            --volume $(pwd)/env_context/${env_type}_${cluster_version}/${test_type}/options.yaml:/resources/options.yaml \
+            --volume $kubeconfig_dir:/usr/src/app/tests/cypress/config/import-kubeconfig \
+            --env TEST_GROUP="console-ui" \
+            --env BROWSER='chrome' \
+            quay.io/open-cluster-management/console-ui-tests:${TEST_SNAPSHOT}
             ;;
         "CLUSTER_LIFECYCLE")
             ;;
         "APP_UI")
             ;;
         "APP_BACKEND")
+            sudo $DOCKER run \
+            --volume $result_path/:/opt/e2e/client/canary/results \
+            --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/e2e/default-kubeconfigs/hub \
+            --volume $(pwd)/env_context/${env_type}_${cluster_version}/imported_kubeconfig:/opt/e2e/default-kubeconfigs/import-kubeconfig \
+            --env KUBE_DIR=/opt/e2e/default-kubeconfigs \
+            --name app-backend-e2e \
+            quay.io/open-cluster-management/applifecycle-backend-e2e:${TEST_SNAPSHOT}
             ;;
         "OBSERVABILITY")
             ;;

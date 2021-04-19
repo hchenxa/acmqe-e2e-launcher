@@ -32,6 +32,7 @@ export KUBE_PASSWORD=${KUBE_PASSWORD:-}
 setup_oc
 setup_jq
 setup_container_client
+setup_python_dep
 
 if [[ -z $ACM_VERSION ]]; then
     echo "Please set ACM_VERSION environment variable before running the scripts"

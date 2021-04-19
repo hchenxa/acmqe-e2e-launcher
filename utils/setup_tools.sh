@@ -37,7 +37,7 @@ function setup_oc() {
     fi
 }
 
-function install_python_dep() {
+function setup_python_dep() {
     # Need to make sure the python was installed.
     command -v python3 2>/dev/null
     if [[ $? -ne 0 ]]; then

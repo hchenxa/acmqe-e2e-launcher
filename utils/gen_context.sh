@@ -49,7 +49,7 @@ function generate_options() {
     mkdir -p env_context/${env_type}_${cluster_version}/${test_type}
 
     case $test_type in
-        SEARCH)
+        "SEARCH")
             cat << EOF > env_context/${env_type}_${cluster_version}/${test_type}/options.yaml
 options:
   hub:
@@ -58,13 +58,20 @@ options:
     password: $password
 EOF
             ;;
-        KUI)
+        "KUI")
             cat << EOF > env_context/${env_type}_${cluster_version}/${test_type}/options.yaml
 options:
   hub:
     baseDomain: $baseDomain
     user: $username
     password: $password
+EOF
+            ;;
+        "OBSERVABILITY")
+            cat << EOF > env_context/${env_type}_${cluster_version}/${test_type}/resources/options.yaml
+options:
+  hub:
+    baseDomain: $baseDomain
 EOF
             ;;
     esac

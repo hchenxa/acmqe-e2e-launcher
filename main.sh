@@ -26,6 +26,9 @@ export QUAY_PASSWORD=${QUAY_PASSWORD:-}
 # This variable was used for current report test, will be removed later.
 export GEN_REPORT_ONLY=${GEN_REPORT_ONLY:-false}
 
+export KUBE_USERNAME=${KUBE_USERNAME:-kubeadmin}
+export KUBE_PASSWORD=${KUBE_PASSWORD:-}}
+
 setup_oc
 setup_jq
 setup_container_client

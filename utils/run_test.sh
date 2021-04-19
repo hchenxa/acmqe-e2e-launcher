@@ -81,10 +81,13 @@ function run_test() {
             ;;
         "OBSERVABILITY")
             sudo $DOCKER run \
+            --net host \
             --volume $result_path/:/results \
-            --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube \
+            --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
             --volume $(pwd)/env_context/${env_type}_${cluster_version}/${test_type}/resources:/resources \
             --name observability-e2e-test-${env_type}-${cluster_version} \
+            --env SKIP_INSTALL_STEP=true \
+            --env SKIP_UNINSTALL_STEP=true \
             quay.io/open-cluster-management/observability-e2e-test:${TEST_SNAPSHOT}
             ;;
     esac

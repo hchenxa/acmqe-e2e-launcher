@@ -33,7 +33,7 @@ function setup_oc() {
     if [[ $? -ne 0 ]]; then
         curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
         sudo tar -zxf openshift-client-linux.tar.gz -C /usr/local/bin
-        chmod +x /usr/local/bin/oc
+        sudo chmod a+x /usr/local/bin/oc
     fi
 }
 
@@ -41,6 +41,7 @@ function install_python_dep() {
     # Need to make sure the python was installed.
     command -v python3 2>/dev/null
     if [[ $? -ne 0 ]]; then
-        dnf install -y python3 python3-pip
+        sudo dnf install -y python3 python3-pip
     fi
+    sudo pip3 install untangle &> /dev/null
 }

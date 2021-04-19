@@ -27,7 +27,7 @@ export QUAY_PASSWORD=${QUAY_PASSWORD:-}
 export GEN_REPORT_ONLY=${GEN_REPORT_ONLY:-false}
 
 export KUBE_USERNAME=${KUBE_USERNAME:-kubeadmin}
-export KUBE_PASSWORD=${KUBE_PASSWORD:-}}
+export KUBE_PASSWORD=${KUBE_PASSWORD:-}
 
 setup_oc
 setup_jq

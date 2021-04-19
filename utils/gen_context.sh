@@ -68,6 +68,7 @@ options:
 EOF
             ;;
         "OBSERVABILITY")
+            mkdir -p env_context/${env_type}_${cluster_version}/${test_type}/resources
             cat << EOF > env_context/${env_type}_${cluster_version}/${test_type}/resources/options.yaml
 options:
   hub:

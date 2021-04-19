@@ -3,7 +3,7 @@
 export DOCKER=${DOCKER:-docker}
 
 function setup_container_client() {
-    command -v $DOCKER 2>/dev/null
+    command -v $DOCKER &> /dev/null
     if [[ $? -ne 0 ]]; then
        if [[ $DOCKER == "docker" ]]; then
           sudo dnf config-manager --add-repo=https://download.docker.com/linux/fedora/docker-ce.repo
@@ -29,7 +29,7 @@ function setup_jq() {
 }
 
 function setup_oc() {
-    command -v oc 2> /dev/null
+    command -v oc &> /dev/null
     if [[ $? -ne 0 ]]; then
         curl -O https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz
         sudo tar -zxf openshift-client-linux.tar.gz -C /usr/local/bin
@@ -39,7 +39,7 @@ function setup_oc() {
 
 function install_python_dep() {
     # Need to make sure the python was installed.
-    command -v python3 2>/dev/null
+    command -v python3 &> /dev/null
     if [[ $? -ne 0 ]]; then
         sudo dnf install -y python3 python3-pip
     fi

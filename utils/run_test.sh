@@ -1,35 +1,42 @@
 #!/usr/bin/env bash
 
 function run_test() {
-    env_type=$1
-    cluster_version=$2
-    test_type=$3
-    result_path="$(pwd)/results/$4/${env_type}_${cluster_version}/"
 
-    echo "Start the running $test_type cases..."
+    _test_case=$1
+    _timestamp=$2
+    _env_type=$3
+    if [[ $_env_type == "customer" ]]; then
+        result_path="$(pwd)/results/${_timestamp}/${_env_type}"
+        config_path="$(pwd)/env_context/${_env_type}"
+    else
+        _cluster_version=$4
+        result_path="$(pwd)/results/${_timestamp}/${_env_type}_${_cluster_version}"
+        config_path="$(pwd)/env_context/${_env_type}_${_cluster_version}"
+    fi
+    echo "Start the running $_test_case cases..."
 
-    case $test_type in
+    case $_test_case in
         "SEARCH")
             sudo $DOCKER run \
             --network host \
             --dns 8.8.8.8 \
             --dns 8.8.4.4 \
             -e BROWSER="chrome" \
-            --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
-            --volume $(pwd)/env_context/${env_type}_${cluster_version}/imported_kubeconfig:/opt/.kube/import-kubeconfig \
-            --volume $(pwd)/env_context/${env_type}_${cluster_version}/${test_type}/options.yaml:/resources/options.yaml \
+            --volume ${config_path}/kubeconfig:/opt/.kube/config \
+            --volume ${config_path}/imported_kubeconfig:/opt/.kube/import-kubeconfig \
+            --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
             --volume $result_path:/results \
-            --name search-e2e-${env_type}-${cluster_version} \
+            --name search-e2e-${env_type} \
             quay.io/open-cluster-management/search-e2e:$TEST_SNAPSHOT
             ;;
         "KUI")
             sudo $DOCKER run \
             --network host \
             --env BROWSER="firefox" \
-            --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
-            --volume $result_path:/results \
-            --volume $(pwd)/env_context/${env_type}_${cluster_version}/${test_type}/options.yaml:/resources/options.yaml \
-            --name kui-web-tests-${env_type}-${cluster_version} \
+            --volume ${config_path}/kubeconfig:/opt/.kube/config \
+            --volume ${result_path}:/results \
+            --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
+            --name kui-web-tests-${env_type} \
             quay.io/open-cluster-management/kui-web-terminal-tests:$TEST_SNAPSHOT
             ;;
         "GRC_UI")
@@ -78,10 +85,10 @@ function run_test() {
         "OBSERVABILITY")
             sudo $DOCKER run \
             --net host \
-            --volume $result_path:/results \
-            --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/opt/.kube/config \
-            --volume $(pwd)/env_context/${env_type}_${cluster_version}/${test_type}/resources:/resources \
-            --name observability-e2e-test-${env_type}-${cluster_version} \
+            --volume ${result_path}:/results \
+            --volume ${config_path}/kubeconfig:/opt/.kube/config \
+            --volume ${config_path}/${_test_case}/resources:/resources \
+            --name observability-e2e-test-${env_type} \
             --env SKIP_INSTALL_STEP=true \
             --env SKIP_UNINSTALL_STEP=true \
             quay.io/open-cluster-management/observability-e2e-test:${TEST_SNAPSHOT}

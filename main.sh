@@ -3,12 +3,11 @@
 source utils/helper.sh
 source utils/run_test.sh
 source utils/setup_tools.sh
-source env_vars
-
 setup_oc
 setup_jq
 setup_container_client
 
+source env_vars
 source utils/gen_context.sh
 
 OLD_IFS="$IFS"

@@ -40,17 +40,16 @@ function run_test() {
             quay.io/open-cluster-management/kui-web-terminal-tests:$TEST_SNAPSHOT
             ;;
         "GRC_UI")
-            #(TODO)
-            # sudo $DOCKER run \
-            # --volume $result_path/results:/opt/app-root/src/grc-ui/test-output/e2e \
-            # --volume $result_path/results-cypress:/opt/app-root/src/grc-ui/test-output/cypress \
-            # --env OC_CLUSTER_URL="https://api.${HUB_BASEDOMAIN}:6443" \
-            # --env OC_CLUSTER_PASS="${HUB_PASSWORD}" \
-            # --env OC_CLUSTER_USER="${HUB_USERNAME}" \
-            # --env RBAC_PASS="${RBAC_PASS}" \
-            # --env CYPRESS_STANDALONE_TESTSUITE_EXECUTION=FALSE \
-            # --env MANAGED_CLUSTER_NAME="import-${TRAVIS_BUILD_ID}" \
-            # --name grc-ui-tests-${TIME_STAMP} \
+            sudo $DOCKER run \
+            --volume $result_path/results:/opt/app-root/src/grc-ui/test-output/e2e \
+            --volume $result_path/results-cypress:/opt/app-root/src/grc-ui/test-output/cypress \
+            --env OC_CLUSTER_URL="${OCP_URL}" \
+            --env OC_CLUSTER_PASS="${HUB_PASSWORD}" \
+            --env OC_CLUSTER_USER="${HUB_USERNAME}" \
+            --env RBAC_PASS="${RBAC_PASS}" \
+            --env CYPRESS_STANDALONE_TESTSUITE_EXECUTION=FALSE \
+            --name grc-ui-tests-${TIME_STAMP} \
+            hchenxa1986/grc-test:test
             # quay.io/open-cluster-management/grc-ui-tests:${TEST_SNAPSHOT}
             ;;
         "GRC_FRAMEWORK")

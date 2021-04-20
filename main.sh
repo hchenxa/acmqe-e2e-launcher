@@ -18,46 +18,47 @@ typecase_array=($_test_case)
 IFS="$OLD_IFS"
 
 if [[ $USER_ENV == "true" ]]; then
-   if [[ ! -z $OCP_TOKEN ]]; then
-       generate_context_withtoken $OCP_TOKEN $OCP_URL "customer"
-   else
-       generate_context $HUB_USERNAME $HUB_PASSWORD $OCP_URL "customer"
-   fi
-   # (TODO)Some cases required the managed cluster context, will handle this part later
-   _managed_cluster=$(get_imported_cluster "env_context/customer/kubeconfig")
-   if [[ $_managed_cluster == "" ]]; then
-       echo "no managed cluster in the cluster"
-   else
-       _imported_conf=$(generate_importcluster_context ${_managed_cluster} "customer")
-   fi
-   _config_path=$(get_config_path customer)
+    if [[ ! -z $OCP_TOKEN ]]; then
+        generate_context_withtoken $OCP_TOKEN $OCP_URL "customer"
+    else
+        generate_context $HUB_USERNAME $HUB_PASSWORD $OCP_URL "customer"
+    fi
+    # (TODO)Some cases required the managed cluster context, will handle this part later
+    _managed_cluster=$(get_imported_cluster "env_context/customer/kubeconfig")
+    if [[ $_managed_cluster == "" ]]; then
+        echo "no managed cluster in the cluster"
+    else
+        _imported_conf=$(generate_importcluster_context ${_managed_cluster} "customer")
+    fi
+    _config_path=$(get_config_path customer)
 
-   mkdir -p "results/${TIME_STAMP}/customer"
-   _base_domain=$(get_basedomain "customer")
-   _id_provider=$(get_idprovider "customer")
+    mkdir -p "results/${TIME_STAMP}/customer"
+    _base_domain=$(get_basedomain "customer")
+    _id_provider=$(get_idprovider "customer")
 
-   for tc in ${typecase_array[@]}
-   do
-       generate_options $_config_path $_base_domain $tc $HUB_USERNAME $HUB_PASSWORD $_id_provider
-       run_test $tc $TIME_STAMP "customer"
-   done
+    for tc in ${typecase_array[@]}
+    do
+        # (TODO), need to handle when using token to do the authentication here
+        generate_options $_config_path $_base_domain $tc $HUB_USERNAME $HUB_PASSWORD $_id_provider
+        run_test $tc $TIME_STAMP "customer"
+    done
 
-   source utils/gen_report.sh
-   generate_md results/${TIME_STAMP}/customer results/${TIME_STAMP}/customer/result.md $TEST_SNAPSHOT "test" "customer" "customer" "ClusterClaim" "ImportClusterClaim" hchentest
-   push_report results/${TIME_STAMP}/customer/result.md
-else
-   supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
-   echo "The supported hub type is $supported_hub_type in acm version $ACM_VERSION"
-   OLD_IFS="$IFS"
-   IFS=","
-   _type=$(phase_type $ACM_HUB_TYPE)
-   type_array=($_type)
-   IFS="$OLD_IFS"
-   _version=$(phase_version $ACM_VERSION)
+    source utils/gen_report.sh
+    generate_md results/${TIME_STAMP}/customer results/${TIME_STAMP}/customer/result.md $TEST_SNAPSHOT "test" "customer" "customer" "ClusterClaim" "ImportClusterClaim" hchentest
+    push_report results/${TIME_STAMP}
 
-   # Filter the ACM type to run the cases on each of clusters.
-   for type in ${type_array[@]}
-   do
+    supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
+    echo "The supported hub type is $supported_hub_type in acm version $ACM_VERSION"
+    OLD_IFS="$IFS"
+    IFS=","
+    _type=$(phase_type $ACM_HUB_TYPE)
+    type_array=($_type)
+    IFS="$OLD_IFS"
+    _version=$(phase_version $ACM_VERSION)
+
+    # Filter the ACM type to run the cases on each of clusters.
+    for type in ${type_array[@]}
+    do
         # (TODO) The url here may have multi value, need to handle this case later
         url=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION) | .envs[] | select(.type == \"$type\") | .ocp_route" config/environment.json)
 
@@ -95,6 +96,6 @@ else
 
         source utils/gen_report.sh
         generate_md results/${TIME_STAMP}/${type}_${ACM_VERSION} results/${TIME_STAMP}/${type}_${ACM_VERSION}/result.md $TEST_SNAPSHOT "test" $type $ACM_VERSION "ClusterClaim" "ImportClusterClaim" hchentest
-        push_report results/${TIME_STAMP}/customer/result.md
-   done
+        push_report results/${TIME_STAMP}
+    done
 fi

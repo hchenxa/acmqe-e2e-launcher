@@ -100,5 +100,15 @@ options:
     baseDomain: $baseDomain
 EOF
             ;;
+        "GRC_UI")
+            cat << EOF > ${config_path}/${test_type}/options.yaml
+options:
+  hub:
+    hubClusterURL: https://api.${baseDomain}:6443
+    user: $username
+    password: $password
+    baseURL: https://multicloud-console.apps.${baseDomain}
+EOF
+            ;;
     esac
 }

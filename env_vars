@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # This variable was used to check if the job was using user environment, if yes, user need to provide the login creds.
-export USER_ENV=${USER_ENV:-false}
+export USER_ENV=${USER_ENV:-true}
 
 # This variable was used to determin the Snapshot version which you want to apply in your environment.
 export TEST_SNAPSHOT=${TEST_SNAPSHOT:-latest}

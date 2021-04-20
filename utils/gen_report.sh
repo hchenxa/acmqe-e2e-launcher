@@ -21,6 +21,8 @@ function push_report() {
     pushd /tmp/acm_regression/report
     git add $(basename $_report_location)
     git status
+    git config --global user.email "huichen@redhat.com"
+    git config --global user.name "hchenxa"
     git diff-index --quiet HEAD || git commit -am "Save Regression Results ${_report_location}"
     git push
     popd

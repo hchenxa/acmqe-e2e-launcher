@@ -41,6 +41,21 @@ function get_basedomain() {
     echo ${route_console#*apps.}
 }
 
+function get_acm_route() {
+    # Used to get the acm route
+    cluster_type=$1
+
+    # We may not know the acm installed namespace, so need to filter out the namespace first all get the route from all namespaces.
+    if [[ $cluster_type == "customer" ]]; then
+        _acm_installed_namespace=$(KUBECONFIG=env_context/customer/kubeconfig oc get subscriptions.operators.coreos.com --all-namespaces | grep advanced-cluster-management | awk '{print $1}')
+        route_console=$(KUBECONFIG=env_context/customer/kubeconfig oc get route multicloud-console -n $_acm_installed_namespace -o=jsonpath='{.spec.host}')
+    else
+        acm_version=$2
+        _acm_installed_namespace=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get subscriptions.operators.coreos.com --all-namespaces | grep advanced-cluster-management | awk '{print $1}')
+        route_console=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route multicloud-console -n $_acm_installed_namespace -o=jsonpath='{.spec.host}')
+    fi
+    echo ${route_console}
+}
 function get_idprovider() {
     cluster_type=$1
     if [[ $cluster_type == "customer" ]]; then

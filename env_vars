@@ -72,5 +72,8 @@ export GEN_REPORT_ONLY=${GEN_REPORT_ONLY:-false}
 # This variable was used to push the report to github repo
 export GITHUB_TOKEN=${GITHUB_TOKEN:-}
 
+# This variable was used in grc ui testing, hardcode the value here.
+export RBAC_PASS=${RBAC_PASS:-"acmqe"}
+
 # This varialbe was used to generate the timestamp to save the test report. 
 export TIME_STAMP=$(date "+%Y%m%d%H%M")

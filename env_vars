@@ -32,7 +32,7 @@ else
     export OCP_TOKEN=${OCP_TOKEN:-}
     if [[ -z $OCP_TOKEN ]]; then
         export HUB_USERNAME=${HUB_USERNAME:-kubeadmin}
-        export HUB_USERNAME=${HUB_PASSWORD:-}
+        export HUB_PASSWORD=${HUB_PASSWORD:-}
         if [[ -z $HUB_USERNAME || -z $HUB_PASSWORD ]]; then
             echo "Please make sure you have user variable HUB_USERNAME, HUB_PASSWORD exported if you did not use the token for authentication."
             exit 1

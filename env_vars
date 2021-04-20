@@ -22,7 +22,7 @@ if [[ $USER_ENV == "false" ]]; then
     # This variable will be ready from jenkins configuration, and the value will be like "aws,azure,gcp,roks", so need to split the ',' here as well
     export ACM_HUB_TYPE=${ACM_HUB_TYPE:-AWS}
 else
-    # If the variable USER_ENV was set to true, need user input the user variable KUBE_USERNAME, KUBE_PASSWORD, OCP_URL
+    # If the variable USER_ENV was set to true, need user input the user variable HUB_USERNAME, HUB_PASSWORD, OCP_URL.
     export OCP_URL=${OCP_URL:-}
     if [[ -z $OCP_URL ]]; then
         echo "Please make sure you have user variable OCP_URL exported"
@@ -31,10 +31,10 @@ else
 
     export OCP_TOKEN=${OCP_TOKEN:-}
     if [[ -z $OCP_TOKEN ]]; then
-        export KUBE_USERNAME=${KUBE_USERNAME:-kubeadmin}
-        export KUBE_USERNAME=${KUBE_PASSWORD:-}
-        if [[ -z $KUBE_USERNAME || -z $KUBE_PASSWORD ]]; then
-            echo "Please make sure you have user variable KUBE_USERNAME, KUBE_USERNAME exported"
+        export HUB_USERNAME=${HUB_USERNAME:-kubeadmin}
+        export HUB_USERNAME=${HUB_PASSWORD:-}
+        if [[ -z $HUB_USERNAME || -z $HUB_PASSWORD ]]; then
+            echo "Please make sure you have user variable HUB_USERNAME, HUB_PASSWORD exported if you did not use the token for authentication."
             exit 1
         fi
     fi

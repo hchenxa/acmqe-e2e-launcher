@@ -20,7 +20,7 @@ if [[ $USER_ENV == "true" ]]; then
     if [[ ! -z $OCP_TOKEN ]]; then
         generate_context_withtoken $OCP_TOKEN $OCP_URL "customer"
     else
-        generate_context $KUBE_USERNAME $KUBE_PASSWORD $OCP_URL "customer"
+        generate_context $HUB_USERNAME $HUB_PASSWORD $OCP_URL "customer"
     fi
     # (TODO)Some cases required the managed cluster context, will handle this part later
     _managed_cluster=$(get_imported_cluster "env_context/customer/kubeconfig")
@@ -37,8 +37,8 @@ if [[ $USER_ENV == "true" ]]; then
 
     for tc in ${typecase_array[@]}
     do
-        generate_options ${_config_path} ${_base_domain} $tc $KUBE_USERNAME $KUBE_PASSWORD $_id_provider
-        run_test ${tc} ${TIME_STAMP} "customer"
+        generate_options $_config_path $_base_domain $tc $HUB_USERNAME $HUB_PASSWORD $_id_provider
+        run_test $tc $TIME_STAMP "customer"
     done
 
     source utils/gen_report.sh
@@ -78,17 +78,17 @@ else
         if [[ $_managed_cluster == "" ]]; then
             echo "no managed cluster in the cluster"
         else
-            _imported_conf=$(generate_importcluster_context ${_managed_cluster} ${type} ${ACM_VERSION})
+            _imported_conf=$(generate_importcluster_context $_managed_cluster $type $ACM_VERSION)
         fi
         mkdir -p "results/${TIME_STAMP}/${type}_${ACM_VERSION}"
-        _base_domain=$(get_basedomain ${type} ${ACM_VERSION})
-        _id_provider=$(get_idprovider ${type} ${ACM_VERSION})
-        _config_path=$(get_config_path ${type} ${ACM_VERSION})
+        _base_domain=$(get_basedomain $type $ACM_VERSION)
+        _id_provider=$(get_idprovider $type $ACM_VERSION)
+        _config_path=$(get_config_path $type $ACM_VERSION)
 
         for tc in ${typecase_array[@]}
         do
-            generate_options ${_config_path} ${_base_domain} $tc $(eval echo '$'"$_username") $(eval echo '$'"$_passwd") $_id_provider
-            run_test ${tc} ${TIME_STAMP} ${type} ${ACM_VERSION}
+            generate_options $_config_path $_base_domain $tc $(eval echo '$'"$_username") $(eval echo '$'"$_passwd") $_id_provider
+            run_test $tc $TIME_STAMP $type $ACM_VERSION
         done
 
         source utils/gen_report.sh

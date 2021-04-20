@@ -1,0 +1,30 @@
+pipeline {
+    agent { label "rhacm-run" }
+    environment {
+        slave_home = "${sh(script: 'printenv HOME', returnStdout: true).trim()}"
+    }
+
+    stages {
+        stage('Regression Test') {
+            steps {
+                println "Running regression test"
+                sh "sudo sh -x ./run.sh"
+            }
+        }
+        stage('Clean ENV') {
+            steps {
+                println "Clean envirnoment"
+                
+                sh ''' #!/bin/bash
+                  sudo $DOCKER stop $(sudo $DOCKER ps -a -q) 
+                  sudo $DOCKER rm $(sudo $DOCKER ps -a -q) 
+                  sudo $DOCKER rmi $(sudo $DOCKER images -a -q) 
+                  sudo rm -rf $WORKSPACE/results
+                  
+                 '''
+
+                }
+        }
+    }
+}
+

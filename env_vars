@@ -69,5 +69,8 @@ fi
 # This variable was used for current report test, will be removed later.
 export GEN_REPORT_ONLY=${GEN_REPORT_ONLY:-false}
 
+# This variable was used to push the report to github repo
+export GITHUB_TOKEN=${GITHUB_TOKEN:-}
+
 # This varialbe was used to generate the timestamp to save the test report. 
 export TIME_STAMP=$(date "+%Y%m%d%H%M")

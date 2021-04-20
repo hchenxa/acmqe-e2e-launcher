@@ -32,26 +32,79 @@ function phase_type() {
 function get_basedomain() {
     # Used to get the cluster base domain
     cluster_type=$1
-    acm_version=$2
-    route_console=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+    if [[ $cluster_type == "customer" ]]; then
+        route_console=$(KUBECONFIG=env_context/customer/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+    else
+        acm_version=$2
+        route_console=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+    fi
     echo ${route_console#*apps.}
 }
 
 function get_idprovider() {
     cluster_type=$1
-    acm_version=$2
-    echo $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc whoami)
+    if [[ $cluster_type == "customer" ]]; then
+        echo $(KUBECONFIG=env_context/customer/kubeconfig oc whoami)
+    else
+        acm_version=$2
+        echo $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc whoami)
+    fi
 }
 
 function check_imported_cluster() {
-    cluster_type=$1
-    acm_version=$2
-    cluster_namespace=$3
-    if [[ $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get clusterdeployment -n $cluster_namespace | wc -l | sed 's/^ *//') == 0 ]]; then
+    kubeconfig_path=$1
+    cluster_namespace=$2
+    if [[ $(KUBECONFIG=$kubeconfig_path oc get clusterdeployment -n $cluster_namespace | wc -l | sed 's/^ *//') == 0 ]]; then
         # If no clusterdeployment exists in the namespace, that means the cluster was imported.
         echo "false"
     else
         # If there have clusterdeployment exists in the namespace, that means the cluster was created by hive.
         echo "true"
+    fi
+}
+
+function get_imported_cluster() {
+    kubeconfig_path=$1
+    _managed_cluster=$(KUBECONFIG=$kubeconfig_path oc get managedcluster --no-headers --ignore-not-found | awk '{print $1}')
+    if [[ $(echo "$_managed_cluster" | wc -l | sed 's/\ //g' ) == 0 ]]; then
+        echo "No imported cluster found, please try to import a managed cluster first and rerun the test"
+        exit 1
+    elif [[ $(echo "$_managed_cluster" | wc -l | sed 's/\ //g' ) == 1 ]]; then
+        _imported_by_hive=$(check_imported_cluster ${kubeconfig_path} ${_managed_cluster})
+        if [[ $_imported_by_hive == 'true' ]]; then
+            echo ${_managed_cluster}
+        else
+            echo ""
+        fi
+    else
+        _flag=0
+        for mc in $_managed_cluster
+        do
+            if [[ $mc == "local-cluster" ]]; then
+                continue
+            else
+                # (TODO) Will filter out the unavailable cluster later
+                _imported_by_hive=$(check_imported_cluster ${kubeconfig_path} $mc)
+                if [[ $_imported_by_hive == 'true' ]]; then
+                    echo "$mc"
+                    _flag=1
+                else
+                    continue
+                fi
+                if [[ $_flag == 1 ]]; then
+                    break
+                fi
+            fi
+        done
+    fi
+}
+
+function get_config_path() {
+    cluster_type=$1
+    if [[ $cluster_type == "customer" ]]; then
+        echo "env_context/customer"
+    else
+        acm_version=$2
+        echo "env_context/${cluster_type}_${acm_version}"
     fi
 }

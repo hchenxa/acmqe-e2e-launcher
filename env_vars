@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+# This variable was used to check if the job was using user environment, if yes, user need to provide the login creds.
+export USER_ENV=${USER_ENV:-false}
+
+# This variable was used to determin the Snapshot version which you want to apply in your environment.
+export TEST_SNAPSHOT=${TEST_SNAPSHOT:-latest}
+
+# This variable was used to determine the ACM VERSION for testing.
+if [[ $USER_ENV == "false" ]]; then
+    export ACM_VERSION=${ACM_VERSION:-2.3}
+
+    if [[ -z $ACM_VERSION ]]; then
+        echo "Please set ACM_VERSION environment variable before running the scripts"
+        exit 1
+    fi
+    if [[ $(jq -r ".acm_versions[].version == $ACM_VERSION" config/environment.json | grep true | wc -l | sed 's/^ *//') == 0 ]]; then
+        echo "can not find the supported ACM_VERSION:$ACM_VERSION, please try to correct the version that the automation supported"
+        exit 1
+    fi
+
+    # This variable will be ready from jenkins configuration, and the value will be like "aws,azure,gcp,roks", so need to split the ',' here as well
+    export ACM_HUB_TYPE=${ACM_HUB_TYPE:-AWS}
+else
+    # If the variable USER_ENV was set to true, need user input the user variable HUB_USERNAME, HUB_PASSWORD, OCP_URL.
+    export OCP_URL=${OCP_URL:-}
+    if [[ -z $OCP_URL ]]; then
+        echo "Please make sure you have user variable OCP_URL exported"
+        exit 1
+    fi
+
+    export OCP_TOKEN=${OCP_TOKEN:-}
+    if [[ -z $OCP_TOKEN ]]; then
+        export HUB_USERNAME=${HUB_USERNAME:-kubeadmin}
+        export HUB_USERNAME=${HUB_PASSWORD:-}
+        if [[ -z $HUB_USERNAME || -z $HUB_PASSWORD ]]; then
+            echo "Please make sure you have user variable HUB_USERNAME, HUB_PASSWORD exported if you did not use the token for authentication."
+            exit 1
+        fi
+    fi
+fi
+
+# This variable was used to determine which test you want to run and the value will like "kui,search,observability", use "," to split each cases group
+export ACM_TEST_GROUP=${ACM_TEST_GROUP:-}
+if [[ -z $ACM_TEST_GROUP ]]; then
+    echo "Please set ACM_TEST_GROUP environment variable before running the scripts"
+    exit 1
+fi
+
+# This variable will be ready from jenkins configuration, and the value will be like "docker" or "podman"
+export DOCKER=${DOCKER:-docker}
+
+# This variable will be ready from jenkins configuration which used to pull docker images from quay.io
+export QUAY_USERNAME=${QUAY_USERNAME:-}
+export QUAY_PASSWORD=${QUAY_PASSWORD:-}
+if [[ -z $QUAY_USERNAME || -z $QUAY_PASSWORD ]]; then
+    echo "Please set QUAY_USERNAME and QUAY_PASSWORD environment variable before running the scripts"
+    exit 1
+fi
+
+# This variable was used for different acm repo, the supported value should be 'acm-d' and 'open-cluster-management'.
+export QUAY_ORG=${QUAY_ORG:-"open-cluster-management"}
+sudo $DOCKER login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io/$QUAY_ORG
+if [[ $? -ne 0 ]]; then
+    echo "can not login quay.io/$QUAY_ORG with the username and password you provided"
+    exit 1
+fi
+
+# This variable was used for current report test, will be removed later.
+export GEN_REPORT_ONLY=${GEN_REPORT_ONLY:-false}
+
+# This varialbe was used to generate the timestamp to save the test report. 
+export TIME_STAMP=$(date "+%Y%m%d%H%M")

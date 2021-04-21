@@ -54,15 +54,15 @@ Usage: python3 generate_md.py <path to folder with xml results> <destination fil
     _message = ""
     # Choose our heading (full failure, partial failure, full success)
     if _failed == _total and _status != 0:
-        _message = _message + f"# :red_circle: {_snapshot} Failed from {_stage.upper()} on {_platform.upper()}\n\n## {_job_url}\n\n"
+        _message = _message + f"# :red_circle: {_snapshot} Failed when running {_stage} on {_platform} environment\n\n## {_job_url}\n\n"
     elif _status != 0:
-        _message = _message + f"# :warning: {_snapshot} had some failures from {_stage.upper()} on {_platform.upper()}\n\n## {_job_url}\n\n"
+        _message = _message + f"# :warning: {_snapshot} had some failures when running {_stage} on {_platform} environment\n\n## {_job_url}\n\n"
     else:
-        _message = _message + f"# :white_check_mark: {_snapshot} Passed from {_stage.upper()} on {_platform.upper()}\n\n## {_job_url}\n\n"
+        _message = _message + f"# :white_check_mark: {_snapshot} Passed when running {_stage} on {_platform} environment\n\n## {_job_url}\n\n"
 
     _message = _message + f"Hub Cluster Version: {_hub_cluster_version}\n\nImport Cluster Version: {_import_cluster_version}\n\n"
-    _message = _message + f"Hub Cluster: http://envs.canary.cicd.red-chesterfield.com/#cluster-name-{_hub_cluster_name}\n\n"
-    _message = _message + f"Manual Import Cluster: http://envs.canary.cicd.red-chesterfield.com/#cluster-name-{_import_cluster_name}\n\n"
+    _message = _message + f"Hub Cluster: https://{_hub_cluster_name}\n\n"
+    # _message = _message + f"Manual Import Cluster: http://envs.canary.cicd.red-chesterfield.com/#cluster-name-{_import_cluster_name}\n\n"
     _message = _message + f"## Tests:\n\n|Results|Test|\n|---|---|\n"
 
     # Handle each cases' entry in the table

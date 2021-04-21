@@ -16,6 +16,9 @@ function push_report() {
     fi
     _report_location=$1
     echo "Push the report to github"
+    if [[ -d "/tmp/acm_regression/report" ]]; then
+        rm -rf /tmp/acm_regression/report
+    fi
     git clone --single-branch --branch main https://${GITHUB_TOKEN}@github.com/hchenxa/report.git /tmp/acm_regression/report
     cp -r $_report_location /tmp/acm_regression/report
     pushd /tmp/acm_regression/report

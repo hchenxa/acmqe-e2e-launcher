@@ -46,7 +46,7 @@ if [[ $USER_ENV == "true" ]]; then
     source utils/gen_report.sh
     generate_md results/${TIME_STAMP}/customer/results results/${TIME_STAMP}/customer/report.md $TEST_SNAPSHOT "test" "customer" "customer" "ClusterClaim" "ImportClusterClaim" "hchentest"
     push_report results/${TIME_STAMP}
-
+else
     supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
     echo "The supported hub type is $supported_hub_type in acm version $ACM_VERSION"
     OLD_IFS="$IFS"

@@ -6,11 +6,11 @@ function run_test() {
     _timestamp=$2
     _env_type=$3
     if [[ $_env_type == "customer" ]]; then
-        result_path="$(pwd)/results/${_timestamp}/${_env_type}"
+        result_path="$(pwd)/results/${_timestamp}/${_env_type}/results"
         config_path="$(pwd)/env_context/${_env_type}"
     else
         _cluster_version=$4
-        result_path="$(pwd)/results/${_timestamp}/${_env_type}_${_cluster_version}"
+        result_path="$(pwd)/results/${_timestamp}/${_env_type}_${_cluster_version}/results"
         config_path="$(pwd)/env_context/${_env_type}_${_cluster_version}"
     fi
     echo "Start the running $_test_case cases..."
@@ -41,16 +41,15 @@ function run_test() {
             ;;
         "GRC_UI")
             sudo $DOCKER run \
-            --volume $result_path/results:/opt/app-root/src/grc-ui/test-output/e2e \
-            --volume $result_path/results-cypress:/opt/app-root/src/grc-ui/test-output/cypress \
+            --volume $result_path:/opt/app-root/src/grc-ui/test-output/e2e \
+            --volume $result_path:/opt/app-root/src/grc-ui/test-output/cypress \
             --env OC_CLUSTER_URL="${OCP_URL}" \
             --env OC_CLUSTER_PASS="${HUB_PASSWORD}" \
             --env OC_CLUSTER_USER="${HUB_USERNAME}" \
             --env RBAC_PASS="${RBAC_PASS}" \
             --env CYPRESS_STANDALONE_TESTSUITE_EXECUTION=FALSE \
             --name grc-ui-tests-${TIME_STAMP} \
-            hchenxa1986/grc-test:test
-            # quay.io/open-cluster-management/grc-ui-tests:${TEST_SNAPSHOT}
+            quay.io/open-cluster-management/grc-ui-tests:${TEST_SNAPSHOT}
             ;;
         "GRC_FRAMEWORK")
             #(TODO)

@@ -32,7 +32,7 @@ if [[ $USER_ENV == "true" ]]; then
     fi
     _config_path=$(get_config_path customer)
 
-    mkdir -p "results/${TIME_STAMP}/customer"
+    mkdir -p "results/${TIME_STAMP}/customer/results"
     _base_domain=$(get_basedomain "customer")
     _id_provider=$(get_idprovider "customer")
 
@@ -44,7 +44,7 @@ if [[ $USER_ENV == "true" ]]; then
     done
 
     source utils/gen_report.sh
-    generate_md results/${TIME_STAMP}/customer results/${TIME_STAMP}/customer/result.md $TEST_SNAPSHOT "test" "customer" "customer" "ClusterClaim" "ImportClusterClaim" hchentest
+    generate_md results/${TIME_STAMP}/customer/results results/${TIME_STAMP}/customer/report.md $TEST_SNAPSHOT "test" "customer" "customer" "ClusterClaim" "ImportClusterClaim" "hchentest"
     push_report results/${TIME_STAMP}
 
     supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
@@ -83,7 +83,7 @@ if [[ $USER_ENV == "true" ]]; then
         else
             _imported_conf=$(generate_importcluster_context $_managed_cluster $type $ACM_VERSION)
         fi
-        mkdir -p "results/${TIME_STAMP}/${type}_${ACM_VERSION}"
+        mkdir -p "results/${TIME_STAMP}/${type}_${ACM_VERSION}/results/"
         _base_domain=$(get_basedomain $type $ACM_VERSION)
         _id_provider=$(get_idprovider $type $ACM_VERSION)
         _config_path=$(get_config_path $type $ACM_VERSION)
@@ -95,7 +95,7 @@ if [[ $USER_ENV == "true" ]]; then
         done
 
         source utils/gen_report.sh
-        generate_md results/${TIME_STAMP}/${type}_${ACM_VERSION} results/${TIME_STAMP}/${type}_${ACM_VERSION}/result.md $TEST_SNAPSHOT "test" $type $ACM_VERSION "ClusterClaim" "ImportClusterClaim" hchentest
+        generate_md results/${TIME_STAMP}/${type}_${ACM_VERSION}/results results/${TIME_STAMP}/${type}_${ACM_VERSION}/report.md $TEST_SNAPSHOT "test" $type $ACM_VERSION "ClusterClaim" "ImportClusterClaim" hchentest
         push_report results/${TIME_STAMP}
     done
 fi

@@ -6,16 +6,30 @@ function get_supported_type() {
     return $supported_type
 }
 
-function get_ocp_route() {
+function get_ocp_route_from_file() {
+    # Used to get the ocp route address from the file
     cluster_type=$1
     acm_version=$2
-    return ocp_version=$(jq -r ".acm_versions[]|select(.version == $acm_version)|.envs[]|select(.type== "$cluster_type")|ocp_route" config/environment.json)
+    echo $(jq -r ".acm_versions[]|select(.version == $acm_version)|.envs[]|select(.type== "$cluster_type")|ocp_route" config/environment.json)
 }
 
-function get_acm_route() {
+function get_acm_route_from_file() {
+    # Used to get the acm route address from the file
     cluster_type=$1
     acm_version=$2
-    return acm_version=$(jq -r ".acm_versions[]|select(.version == $acm_version)|.envs[]|select(.type== "$cluster_type")|acm_route" config/environment.json)   
+    echo $(jq -r ".acm_versions[]|select(.version == $acm_version)|.envs[]|select(.type== "$cluster_type")|acm_route" config/environment.json)   
+}
+
+function get_acm_version() {
+    # Used to get the acm version
+    cluster_type=$1
+    if [[ $cluster_type == "customer" ]]; then
+        acm_package=$(KUBECONFIG=env_context/customer/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $2}')
+    else
+        acm_version=$2
+        acm_package=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $2}')
+    fi
+    echo ${acm_package#*advanced-cluster-management.}
 }
 
 function phase_version() {
@@ -56,6 +70,7 @@ function get_acm_route() {
     fi
     echo ${route_console}
 }
+
 function get_idprovider() {
     cluster_type=$1
     if [[ $cluster_type == "customer" ]]; then

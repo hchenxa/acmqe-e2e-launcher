@@ -36,10 +36,10 @@ Usage: python3 generate_md.py <path to folder with xml results> <destination fil
 
     #-----Load our build URL, or a dummy value (and print out a warning if not set)----#
     try:
-        _url = os.getenv("TRAVIS_BUILD_WEB_URL") if os.getenv("TRAVIS_BUILD_WEB_URL") is not None else "No Job URL"
+        _url = os.getenv("BUILD_URL") if os.getenv("BUILD_URL") is not None else "No Job URL"
         _job_url = "Job URL: " + _url + "\n"
     except AttributeError as ex:
-        print("No env var for TRAVIS_BUILD_WEB_URL, skipping printing the URL.", file=sys.stderr)
+        print("No env var for BUILD_URL, skipping printing the URL.", file=sys.stderr)
 
     _ignorelist_filepath = os.getenv("IGNORELIST_FILEPATH")
     _ignorelist = []

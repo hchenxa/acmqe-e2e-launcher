@@ -42,9 +42,9 @@ if [[ $USER_ENV == "true" ]]; then
         generate_options $_config_path $_base_domain $tc $HUB_USERNAME $HUB_PASSWORD $_id_provider
         run_test $tc $TIME_STAMP "customer"
     done
-
+    _acm_version=$(get_acm_version "customer")
     source utils/gen_report.sh
-    generate_md results/${TIME_STAMP}/customer/results results/${TIME_STAMP}/customer/report.md $TEST_SNAPSHOT "test" "customer" "customer" "ClusterClaim" "ImportClusterClaim" "hchentest"
+    generate_md results/${TIME_STAMP}/customer/results results/${TIME_STAMP}/customer/report.md $TEST_SNAPSHOT "Regression Test" "customer" $_acm_version "ClusterClaim" "ImportClusterClaim" "hchentest"
     push_report results/${TIME_STAMP}
 else
     supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
@@ -94,8 +94,9 @@ else
             run_test $tc $TIME_STAMP $type $ACM_VERSION
         done
 
+        _acm_version=$(get_acm_version ${type} ${ACM_VERSION})
         source utils/gen_report.sh
-        generate_md results/${TIME_STAMP}/${type}_${ACM_VERSION}/results results/${TIME_STAMP}/${type}_${ACM_VERSION}/report.md $TEST_SNAPSHOT "test" $type $ACM_VERSION "ClusterClaim" "ImportClusterClaim" hchentest
+        generate_md results/${TIME_STAMP}/${type}_${ACM_VERSION}/results results/${TIME_STAMP}/${type}_${ACM_VERSION}/report.md $TEST_SNAPSHOT "Regression Test" $type $_acm_version "ClusterClaim" "ImportClusterClaim" hchentest
         push_report results/${TIME_STAMP}
     done
 fi

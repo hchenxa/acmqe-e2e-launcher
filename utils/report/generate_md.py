@@ -53,7 +53,7 @@ Usage: python3 generate_md.py <path to folder with xml results> <destination fil
 
     _message = ""
     # Choose our heading (full failure, partial failure, full success)
-    if _failed == _total and status != 0:
+    if _failed == _total and _status != 0:
         _message = _message + f"# :red_circle: {_snapshot} Failed from {_stage.upper()} on {_platform.upper()}\n\n## {_job_url}\n\n"
     elif _status != 0:
         _message = _message + f"# :warning: {_snapshot} had some failures from {_stage.upper()} on {_platform.upper()}\n\n## {_job_url}\n\n"

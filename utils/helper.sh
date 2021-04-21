@@ -41,6 +41,21 @@ function get_basedomain() {
     echo ${route_console#*apps.}
 }
 
+function get_acm_route() {
+    # Used to get the acm route
+    cluster_type=$1
+
+    # We may not know the acm installed namespace, so need to filter out the namespace first all get the route from all namespaces.
+    if [[ $cluster_type == "customer" ]]; then
+        _acm_installed_namespace=$(KUBECONFIG=env_context/customer/kubeconfig oc get subscriptions.operators.coreos.com --all-namespaces | grep advanced-cluster-management | awk '{print $1}')
+        route_console=$(KUBECONFIG=env_context/customer/kubeconfig oc get route multicloud-console -n $_acm_installed_namespace -o=jsonpath='{.spec.host}')
+    else
+        acm_version=$2
+        _acm_installed_namespace=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get subscriptions.operators.coreos.com --all-namespaces | grep advanced-cluster-management | awk '{print $1}')
+        route_console=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route multicloud-console -n $_acm_installed_namespace -o=jsonpath='{.spec.host}')
+    fi
+    echo ${route_console}
+}
 function get_idprovider() {
     cluster_type=$1
     if [[ $cluster_type == "customer" ]]; then
@@ -67,21 +82,25 @@ function get_imported_cluster() {
     kubeconfig_path=$1
     _managed_cluster=$(KUBECONFIG=$kubeconfig_path oc get managedcluster --no-headers --ignore-not-found | awk '{print $1}')
     if [[ $(echo "$_managed_cluster" | wc -l | sed 's/\ //g' ) == 0 ]]; then
-        echo "No imported cluster found, please try to import a managed cluster first and rerun the test"
-        exit 1
+        echo ""
     elif [[ $(echo "$_managed_cluster" | wc -l | sed 's/\ //g' ) == 1 ]]; then
-        _imported_by_hive=$(check_imported_cluster ${kubeconfig_path} ${_managed_cluster})
-        if [[ $_imported_by_hive == 'true' ]]; then
-            echo ${_managed_cluster}
+        if [[ $_managed_cluster == "local-cluster" ]]; then
+            echo "local-cluster"
         else
-            echo ""
+            _imported_by_hive=$(check_imported_cluster ${kubeconfig_path} ${_managed_cluster})
+            if [[ $_imported_by_hive == 'true' ]]; then
+                echo ${_managed_cluster}
+            else
+                echo ""
+            fi
         fi
     else
         _flag=0
         for mc in $_managed_cluster
         do
             if [[ $mc == "local-cluster" ]]; then
-                continue
+                echo "local-cluster"
+                break
             else
                 # (TODO) Will filter out the unavailable cluster later
                 _imported_by_hive=$(check_imported_cluster ${kubeconfig_path} $mc)

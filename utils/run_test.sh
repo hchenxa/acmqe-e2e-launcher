@@ -52,16 +52,15 @@ function run_test() {
             quay.io/open-cluster-management/grc-ui-tests:${TEST_SNAPSHOT}
             ;;
         "GRC_FRAMEWORK")
-            #(TODO)
-            # managed_cluster_name=$(cat env_context/${env_type}_${cluster_version}/managed_cluster_name)
-            # sudo $DOCKER run \
-            # --network host \
-            # --volume $result_path/:/go/src/github.com/open-cluster-management/governance-policy-framework/test-output \
-            # --volume $(pwd)/env_context/${env_type}_${cluster_version}/kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_hub \
-            # --volume $(pwd)/env_context/${env_type}_${cluster_version}/imported_kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_managed \
-            # --env MANAGED_CLUSTER_NAME="$managed_cluster_name" \
-            # --name grc-policy-framework-tests-${TIME_STAMP} \
-            # quay.io/open-cluster-management/grc-policy-framework-tests:$TEST_SNAPSHOT
+            _managed_cluster_name=$(cat ${config_path}/managed_cluster_name)
+            sudo $DOCKER run \
+            --network host \
+            --volume $result_path:/go/src/github.com/open-cluster-management/governance-policy-framework/test-output \
+            --volume $config_path/kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_hub \
+            --volume $config_path/imported_kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_managed \
+            --env MANAGED_CLUSTER_NAME="$_managed_cluster_name" \
+            --name grc-policy-framework-tests-${TIME_STAMP} \
+            quay.io/open-cluster-management/grc-policy-framework-tests:$TEST_SNAPSHOT
             ;;
         "CONSOLE_UI")
             #(TODO)

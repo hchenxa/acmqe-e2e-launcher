@@ -28,7 +28,7 @@ if [[ $USER_ENV == "true" ]]; then
     if [[ $_managed_cluster == "" ]]; then
         echo "no managed cluster in the cluster"
     else
-        _imported_conf=$(generate_importcluster_context ${_managed_cluster} "customer")
+        generate_importcluster_context ${_managed_cluster} "customer"
     fi
     _config_path=$(get_config_path customer)
 
@@ -81,7 +81,7 @@ if [[ $USER_ENV == "true" ]]; then
         if [[ $_managed_cluster == "" ]]; then
             echo "no managed cluster in the cluster"
         else
-            _imported_conf=$(generate_importcluster_context $_managed_cluster $type $ACM_VERSION)
+            generate_importcluster_context $_managed_cluster $type $ACM_VERSION
         fi
         mkdir -p "results/${TIME_STAMP}/${type}_${ACM_VERSION}/results/"
         _base_domain=$(get_basedomain $type $ACM_VERSION)

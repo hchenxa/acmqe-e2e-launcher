@@ -82,21 +82,25 @@ function get_imported_cluster() {
     kubeconfig_path=$1
     _managed_cluster=$(KUBECONFIG=$kubeconfig_path oc get managedcluster --no-headers --ignore-not-found | awk '{print $1}')
     if [[ $(echo "$_managed_cluster" | wc -l | sed 's/\ //g' ) == 0 ]]; then
-        echo "No imported cluster found, please try to import a managed cluster first and rerun the test"
-        exit 1
+        echo ""
     elif [[ $(echo "$_managed_cluster" | wc -l | sed 's/\ //g' ) == 1 ]]; then
-        _imported_by_hive=$(check_imported_cluster ${kubeconfig_path} ${_managed_cluster})
-        if [[ $_imported_by_hive == 'true' ]]; then
-            echo ${_managed_cluster}
+        if [[ $_managed_cluster == "local-cluster" ]]; then
+            echo "local-cluster"
         else
-            echo ""
+            _imported_by_hive=$(check_imported_cluster ${kubeconfig_path} ${_managed_cluster})
+            if [[ $_imported_by_hive == 'true' ]]; then
+                echo ${_managed_cluster}
+            else
+                echo ""
+            fi
         fi
     else
         _flag=0
         for mc in $_managed_cluster
         do
             if [[ $mc == "local-cluster" ]]; then
-                continue
+                echo "local-cluster"
+                break
             else
                 # (TODO) Will filter out the unavailable cluster later
                 _imported_by_hive=$(check_imported_cluster ${kubeconfig_path} $mc)

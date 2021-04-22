@@ -45,7 +45,7 @@ if [[ $USER_ENV == "true" ]]; then
     _acm_version=$(get_acm_version "customer")
     _acm_console=$(get_acm_console "customer")
     source utils/gen_report.sh
-    generate_md results/${TIME_STAMP}/customer/results results/${TIME_STAMP}/customer/report.md $TEST_SNAPSHOT "Regression" "user" $_acm_version ${_acm_console} "ImportClusterClaim" $_managed_cluster
+    generate_md results/${TIME_STAMP}/customer/results results/${TIME_STAMP}/customer/report.md $TEST_SNAPSHOT "Regression" "user" $_acm_version $_acm_console "ManagedClusterVersion" $_managed_cluster
     push_report results/${TIME_STAMP}
 else
     supported_hub_type=$(jq -r ".acm_versions[]|select(.version == $ACM_VERSION)|.envs[].type" config/environment.json | xargs | sed 's/\ /,/g')
@@ -98,7 +98,7 @@ else
         _acm_version=$(get_acm_version ${type} ${ACM_VERSION})
         _acm_console=$(get_acm_console ${type} ${ACM_VERSION})
         source utils/gen_report.sh
-        generate_md results/${TIME_STAMP}/${type}_${ACM_VERSION}/results results/${TIME_STAMP}/${type}_${ACM_VERSION}/report.md $TEST_SNAPSHOT "Regression" $type $_acm_version ${_acm_console} "ImportClusterClaim" $_managed_cluster
+        generate_md results/${TIME_STAMP}/${type}_${ACM_VERSION}/results results/${TIME_STAMP}/${type}_${ACM_VERSION}/report.md $TEST_SNAPSHOT "Regression" $type $_acm_version $_acm_console "ManagedClusterVersion" $_managed_cluster
         push_report results/${TIME_STAMP}
     done
 fi

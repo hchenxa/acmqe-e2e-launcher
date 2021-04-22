@@ -116,7 +116,7 @@ function get_spoke_cluster_console() {
         _cluster_version=$2
         _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
     fi
-    echo $(KUBECONFIG=$_spoke_context_path oc get clusterclaim consoleurl.cluster.open-cluster-management.io -o jsonpath={.spec.value})
+    echo $(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get clusterclaim consoleurl.cluster.open-cluster-management.io -o jsonpath={.spec.value})
 }
 
 function get_spoke_cluster_version() {
@@ -129,11 +129,11 @@ function get_spoke_cluster_version() {
         _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
     fi
 
-    _product_type=$(KUBECONFIG=$_spoke_context_path oc get product.open-cluster-management.io -o jsonpath={.spec.value})
+    _product_type=$(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get product.open-cluster-management.io -o jsonpath={.spec.value})
     if [[ $_product_type == "OpenShift" ]]; then
-        echo $(KUBECONFIG=$_spoke_context_path oc get clusterclaim version.openshift.io -o jsonpath={.spec.value})
+        echo $(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get clusterclaim version.openshift.io -o jsonpath={.spec.value})
     else
-        echo $(KUBECONFIG=$_spoke_context_path oc get clusterclaim kubeversion.open-cluster-management.io -o jsonpath={.spec.value})
+        echo $(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get clusterclaim kubeversion.open-cluster-management.io -o jsonpath={.spec.value})
     fi
 }
 
@@ -146,5 +146,5 @@ function get_spoke_cluster_platform() {
         _cluster_version=$2
         _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
     fi
-    echo $(KUBECONFIG=$_spoke_context_path oc get clusterclaim platform.open-cluster-management.io -o jsonpath={.spec.value})
+    echo $(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get clusterclaim platform.open-cluster-management.io -o jsonpath={.spec.value})
 }

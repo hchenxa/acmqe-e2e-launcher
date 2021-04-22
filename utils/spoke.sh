@@ -129,7 +129,7 @@ function get_spoke_cluster_version() {
         _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
     fi
 
-    _product_type=$(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get product.open-cluster-management.io -o jsonpath={.spec.value})
+    _product_type=$(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get clusterclaim product.open-cluster-management.io -o jsonpath={.spec.value})
     if [[ $_product_type == "OpenShift" ]]; then
         echo $(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get clusterclaim version.openshift.io -o jsonpath={.spec.value})
     else

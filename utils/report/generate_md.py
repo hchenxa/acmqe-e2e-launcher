@@ -17,7 +17,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 10:
         print("""
 Missing arguments!  
-Usage: python3 generate_md.py <path to folder with xml results> <destination filepath> <snapshot> <stage> <platform> <hub-cluster-version> <import-cluster-version> <hub-cluster-name> <import-cluster-name>
+Usage: python3 generate_md.py <path to folder with xml results> <destination filepath> <snapshot> <stage> <platform> <hub-cluster-version> <hub-cluster-console> <import-cluster-version> <import-cluster-name>
 """)
         exit(1)
 

@@ -32,6 +32,18 @@ function get_acm_version() {
     echo ${acm_package#*advanced-cluster-management.}
 }
 
+function get_acm_console() {
+    # Used to get the acm console
+    cluster_type=$1
+    if [[ $cluster_type == "customer" ]]; then
+        acm_console=$(KUBECONFIG=env_context/customer/kubeconfig oc get route --all-namespaces | grep multicloud-console | awk '{print $3}')
+    else
+        acm_version=$2
+        acm_console=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route --all-namespaces | grep multicloud-console | awk '{print $3}')
+    fi
+    echo ${acm_console}
+}
+
 function phase_version() {
     old_version=$1
     echo $old_version|awk -F '.' '{print $1$2}'

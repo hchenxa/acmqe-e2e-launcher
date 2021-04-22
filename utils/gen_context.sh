@@ -34,33 +34,6 @@ function generate_context_withtoken() {
     echo "${_hub_conf_path}/kubeconfig"    
 }
 
-function generate_importcluster_context() {
-    namespace=$1
-    env_type=$2
-    if [[ $env_type == "customer" ]]; then
-        _imported_conf_path="env_context/customer"
-    else
-        cluster_version=$3
-        _imported_conf_path="env_context/${env_type}_${cluster_version}"
-    fi
-    mkdir -p ${_imported_conf_path}
-    touch ${_imported_conf_path}/imported_kubeconfig
-    if [[ $namespace == "local-cluster" ]]; then
-        # If the cluster only have local-cluster, copy the hub cluster context as the imported cluster context.
-        cp ${_imported_conf_path}/kubeconfig ${_imported_conf_path}/imported_kubeconfig
-    else
-        secret_name=$(KUBECONFIG=${_imported_conf_path}/kubeconfig oc get secret -n $namespace | awk '{print $1}' | grep "^$namespace.*admin-kubeconfig$")
-        if [[ $(uname -s) == "Darwin" ]]; then
-            KUBECONFIG=${_imported_conf_path}/kubeconfig oc get secret -n $namespace $secret_name --template={{.data.kubeconfig}} | base64 -D > ${_imported_conf_path}/imported_kubeconfig
-        else
-            KUBECONFIG=${_imported_conf_path}/kubeconfig oc get secret -n $namespace $secret_name --template={{.data.kubeconfig}} | base64 -d > ${_imported_conf_path}/imported_kubeconfig
-        fi
-        echo "apiVersion: v1" >> ${_imported_conf_path}/imported_kubeconfig
-    fi
-    echo -n "$namespace" > ${_imported_conf_path}/managed_cluster_name
-    echo "${_imported_conf_path}/imported_kubeconfig"
-}
-
 function generate_options() {
 
     config_path=$1

@@ -17,7 +17,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 10:
         print("""
 Missing arguments!  
-Usage: python3 generate_md.py <path to folder with xml results> <destination filepath> <snapshot> <stage> <platform> <hub-cluster-version> <hub-cluster-console> <import-cluster-version> <import-cluster-name>
+Usage: python3 generate_md.py <path to folder with xml results> <destination filepath> <snapshot> <stage> <platform> <hub-cluster-version> <hub-cluster-console> <import-cluster-version> <import-cluster-console>
 """)
         exit(1)
 
@@ -30,7 +30,7 @@ Usage: python3 generate_md.py <path to folder with xml results> <destination fil
     _hub_cluster_version = sys.argv[6]
     _hub_cluster_console = sys.argv[7]
     _import_cluster_version = sys.argv[8]
-    _import_cluster_name = sys.argv[9]
+    _import_cluster_console = sys.argv[9]
     _job_url = ""
     _ignorelist_filepath = None
 
@@ -62,7 +62,7 @@ Usage: python3 generate_md.py <path to folder with xml results> <destination fil
 
     _message = _message + f"Hub Cluster Version: {_hub_cluster_version}\n\nManaged Cluster Version: {_import_cluster_version}\n\n"
     _message = _message + f"Hub Cluster: https://{_hub_cluster_console}\n\n"
-    _message = _message + f"Managed Cluster: {_import_cluster_name}\n\n"
+    _message = _message + f"Managed Cluster: {_import_cluster_console}\n\n"
     _message = _message + f"## Tests:\n\n|Results|Test|\n|---|---|\n"
 
     # Handle each cases' entry in the table

@@ -104,7 +104,7 @@ function get_spoke_cluster_name() {
         _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
     fi
     # Get the cluster name from clusterclaim, and the clusterclaim was introduced in v2.2.
-    KUBECONFIG=$(KUBECONFIG=${_spoke_context_path}/imported_kubeconfig oc get clusterclaim id.k8s.io -o jsonpath={.spec.value} > ${_spoke_context_path}/managed_cluster_name)
+    KUBECONFIG=${_spoke_context_path}/imported_kubeconfig oc get clusterclaim id.k8s.io -o jsonpath={.spec.value} > ${_spoke_context_path}/managed_cluster_name
 }
 
 function get_spoke_cluster_console() {

@@ -60,8 +60,9 @@ Usage: python3 generate_md.py <path to folder with xml results> <destination fil
     else:
         _message = _message + f"# :white_check_mark: {_snapshot} Passed when running {_stage} on {_platform} environment\n\n## {_job_url}\n\n"
 
-    _message = _message + f"Hub Cluster Version: {_hub_cluster_version}\n\nManaged Cluster Version: {_import_cluster_version}\n\n"
+    _message = _message + f"Hub Cluster Version: {_hub_cluster_version}\n\n"
     _message = _message + f"Hub Cluster: https://{_hub_cluster_console}\n\n"
+    _message = _message + f"Managed Cluster Version: {_import_cluster_version}\n\n"
     _message = _message + f"Managed Cluster: {_import_cluster_console}\n\n"
     _message = _message + f"## Tests:\n\n|Results|Test|\n|---|---|\n"
 

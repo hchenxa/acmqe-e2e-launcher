@@ -63,7 +63,15 @@ function run_test() {
             quay.io/open-cluster-management/grc-policy-framework-tests:$TEST_SNAPSHOT
             ;;
         "CONSOLE_UI")
-            #(TODO)
+           ## The console-ui-tests can be run 2.0.x and 2.1.x
+            sudo $DOCKER run \
+            --volume $result_path:/results \
+            --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
+            --volume ${config_path}/imported_kubeconfig:/opt/.kube/import-kubeconfig \
+            --env TEST_GROUP=e2e \
+            --env BROWSER='chrome' \
+            --name console-ui-tests-${TIME_STAMP} \
+            quay.io/open-cluster-management/console-ui-tests:$TEST_SNAPSHOT
             ;;
         "CLUSTER_LIFECYCLE")
             ;;

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-export DOCKER=${DOCKER:-docker}
-
 function setup_container_client() {
     command -v $DOCKER &> /dev/null
     if [[ $? -ne 0 ]]; then
@@ -44,4 +42,11 @@ function setup_python_dep() {
         sudo dnf install -y python3 python3-pip
     fi
     sudo pip3 install untangle &> /dev/null
+}
+
+function init_tools() {
+    setup_oc
+    setup_jq
+    setup_container_client
+    setup_python_dep
 }

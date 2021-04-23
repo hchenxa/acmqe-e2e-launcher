@@ -80,7 +80,7 @@ function run_test() {
         "APP_BACKEND")
             sudo $DOCKER run \
             --volume ${config_path}/kubeconfig:/opt/e2e/default-kubeconfigs/hub \
-            --volume ${config_path}/imported_kubeconfig:/opt/.kube/import-kubeconfig \
+            --volume ${config_path}/imported_kubeconfig:/opt/e2e/default-kubeconfigs/import-kubeconfig \
             --volume ${result_path}:/opt/e2e/client/canary/results \
             --env KUBE_DIR=/opt/e2e/default-kubeconfigs \
             --name applifecycle-backend-e2e-${TIME_STAMP} \

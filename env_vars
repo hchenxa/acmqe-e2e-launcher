@@ -40,6 +40,12 @@ else
     fi
 fi
 
+# This variable was used to determine the ACM Spoke cluster for testing.
+export SPOKE_API_URL=${SPOKE_API_URL:-}
+export SPOKE_TOKEN=${SPOKE_TOKEN:-}
+export SPOKE_USERNAME=${SPOKE_USERNAME:-}
+export SPOKE_PASSWORD=${SPOKE_PASSWORD:-}
+
 # This variable was used to determine which test you want to run and the value will like "kui,search,observability", use "," to split each cases group
 export ACM_TEST_GROUP=${ACM_TEST_GROUP:-}
 if [[ -z $ACM_TEST_GROUP ]]; then

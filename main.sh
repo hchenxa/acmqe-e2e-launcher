@@ -91,7 +91,7 @@ else
         # (TODO)Some cases required the managed cluster context, will handle this part later
         generate_spoke_context ${type} ${ACM_VERSION}
 
-        mkdir -p "results/${TIME_STAMP}/${type}_${ACM_VERSION}/results/"
+        mkdir -p "results/${TIME_STAMP}/${type}-${ACM_VERSION}/results/"
         _base_domain=$(get_basedomain $type $ACM_VERSION)
         _id_provider=$(get_idprovider $type $ACM_VERSION)
         _config_path=$(get_config_path $type $ACM_VERSION)
@@ -113,7 +113,7 @@ else
         _spoke_cluster_version=$(get_spoke_cluster_version ${type} ${ACM_VERSION})
 
         source utils/gen_report.sh
-        generate_md results/${TIME_STAMP}/${type}_${ACM_VERSION}/results results/${TIME_STAMP}/${type}_${ACM_VERSION}/report.md $TEST_SNAPSHOT "Regression" $type $_acm_version $_acm_console $_spoke_cluster_version $_spoke_cluster_console
+        generate_md results/${TIME_STAMP}/${type}-${ACM_VERSION}/results results/${TIME_STAMP}/${type}-${ACM_VERSION}/report.md $TEST_SNAPSHOT "Regression" $type $_acm_version $_acm_console $_spoke_cluster_version $_spoke_cluster_console
         push_report results/${TIME_STAMP}
     done
 fi

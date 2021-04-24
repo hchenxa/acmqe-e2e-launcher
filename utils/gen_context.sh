@@ -10,7 +10,7 @@ function generate_context() {
         _hub_conf_path="env-context/${env_type}"
     else
         cluster_version=$5
-        _hub_conf_path="env-context/${env_type}_${cluster_version}"
+        _hub_conf_path="env-context/${env_type}-${cluster_version}"
     fi
     mkdir -p ${_hub_conf_path}
     touch ${_hub_conf_path}/kubeconfig
@@ -26,7 +26,7 @@ function generate_context_withtoken() {
         _hub_conf_path="env-context/${env_type}"
     else
         cluster_version=$4
-        _hub_conf_path="env-context/${env_type}_${cluster_version}"
+        _hub_conf_path="env-context/${env_type}-${cluster_version}"
     fi
     mkdir -p ${_hub_conf_path}
     touch ${_hub_conf_path}/kubeconfig

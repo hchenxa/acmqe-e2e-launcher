@@ -28,7 +28,7 @@ function get_acm_version() {
         acm_package=$(KUBECONFIG=env-context/customer/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $2}')
     else
         acm_version=$2
-        acm_package=$(KUBECONFIG=env-context/${cluster_type}_${acm_version}/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $2}')
+        acm_package=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $2}')
     fi
     echo ${acm_package#*advanced-cluster-management.}
 }
@@ -40,7 +40,7 @@ function get_acm_console() {
         acm_console=$(KUBECONFIG=env-context/customer/kubeconfig oc get route --all-namespaces | grep multicloud-console | awk '{print $3}')
     else
         acm_version=$2
-        acm_console=$(KUBECONFIG=env-context/${cluster_type}_${acm_version}/kubeconfig oc get route --all-namespaces | grep multicloud-console | awk '{print $3}')
+        acm_console=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get route --all-namespaces | grep multicloud-console | awk '{print $3}')
     fi
     echo ${acm_console}
 }
@@ -63,7 +63,7 @@ function get_basedomain() {
         route_console=$(KUBECONFIG=env-context/customer/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
     else
         acm_version=$2
-        route_console=$(KUBECONFIG=env-context/${cluster_type}_${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+        route_console=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
     fi
     echo ${route_console#*apps.}
 }
@@ -74,7 +74,7 @@ function get_idprovider() {
         echo $(KUBECONFIG=env-context/customer/kubeconfig oc whoami)
     else
         acm_version=$2
-        echo $(KUBECONFIG=env-context/${cluster_type}_${acm_version}/kubeconfig oc whoami)
+        echo $(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc whoami)
     fi
 }
 
@@ -84,6 +84,6 @@ function get_config_path() {
         echo "env-context/customer"
     else
         acm_version=$2
-        echo "env-context/${cluster_type}_${acm_version}"
+        echo "env-context/${cluster_type}-${acm_version}"
     fi
 }

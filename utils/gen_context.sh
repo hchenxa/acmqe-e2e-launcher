@@ -59,6 +59,7 @@ EOF
         "KUI")
             cat << EOF > ${config_path}/${test_type}/options.yaml
 options:
+  identityProvider: $id_provider
   hub:
     baseDomain: $baseDomain
     user: $username

@@ -23,7 +23,7 @@ function run_test() {
             --dns 8.8.4.4 \
             -e BROWSER="chrome" \
             --volume ${config_path}/kubeconfig:/opt/.kube/config \
-            --volume ${config_path}/imported_kubeconfig:/opt/.kube/import-kubeconfig \
+            --volume ${config_path}/imported-kubeconfig:/opt/.kube/import-kubeconfig \
             --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
             --volume $result_path:/results \
             --name search-e2e-${TIME_STAMP} \
@@ -57,7 +57,7 @@ function run_test() {
             --network host \
             --volume $result_path:/go/src/github.com/open-cluster-management/governance-policy-framework/test-output \
             --volume $config_path/kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_hub \
-            --volume $config_path/imported_kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_managed \
+            --volume $config_path/imported-kubeconfig:/go/src/github.com/open-cluster-management/governance-policy-framework/kubeconfig_managed \
             --env MANAGED_CLUSTER_NAME="$_managed_cluster_name" \
             --name grc-policy-framework-tests-${TIME_STAMP} \
             quay.io/open-cluster-management/grc-policy-framework-tests:$TEST_SNAPSHOT
@@ -67,7 +67,7 @@ function run_test() {
             sudo $DOCKER run \
             --volume $result_path:/results \
             --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
-            --volume ${config_path}/imported_kubeconfig:/opt/.kube/import-kubeconfig \
+            --volume ${config_path}/imported-kubeconfig:/opt/.kube/import-kubeconfig \
             --env TEST_GROUP=e2e \
             --env BROWSER='chrome' \
             --name console-ui-tests-${TIME_STAMP} \
@@ -80,7 +80,7 @@ function run_test() {
         "APP_BACKEND")
             sudo $DOCKER run \
             --volume ${config_path}/kubeconfig:/opt/e2e/default-kubeconfigs/hub \
-            --volume ${config_path}/imported_kubeconfig:/opt/e2e/default-kubeconfigs/import-kubeconfig \
+            --volume ${config_path}/imported-kubeconfig:/opt/e2e/default-kubeconfigs/import-kubeconfig \
             --volume ${result_path}:/opt/e2e/client/canary/results \
             --env KUBE_DIR=/opt/e2e/default-kubeconfigs \
             --name applifecycle-backend-e2e-${TIME_STAMP} \

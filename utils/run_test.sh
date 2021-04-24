@@ -7,11 +7,11 @@ function run_test() {
     _env_type=$3
     if [[ $_env_type == "customer" ]]; then
         result_path="$(pwd)/results/${_timestamp}/${_env_type}/results"
-        config_path="$(pwd)/env_context/${_env_type}"
+        config_path="$(pwd)/env-context/${_env_type}"
     else
         _cluster_version=$4
         result_path="$(pwd)/results/${_timestamp}/${_env_type}_${_cluster_version}/results"
-        config_path="$(pwd)/env_context/${_env_type}_${_cluster_version}"
+        config_path="$(pwd)/env-context/${_env_type}_${_cluster_version}"
     fi
     echo "Start the running $_test_case cases..."
 

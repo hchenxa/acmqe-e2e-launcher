@@ -7,10 +7,10 @@ function generate_context() {
     url=$3
     env_type=$4
     if [[ $env_type == "customer" ]]; then
-        _hub_conf_path="env_context/${env_type}"
+        _hub_conf_path="env-context/${env_type}"
     else
         cluster_version=$5
-        _hub_conf_path="env_context/${env_type}_${cluster_version}"
+        _hub_conf_path="env-context/${env_type}_${cluster_version}"
     fi
     mkdir -p ${_hub_conf_path}
     touch ${_hub_conf_path}/kubeconfig
@@ -23,10 +23,10 @@ function generate_context_withtoken() {
     url=$2
     env_type=$3
     if [[ $env_type == "customer" ]]; then
-        _hub_conf_path="env_context/${env_type}"
+        _hub_conf_path="env-context/${env_type}"
     else
         cluster_version=$4
-        _hub_conf_path="env_context/${env_type}_${cluster_version}"
+        _hub_conf_path="env-context/${env_type}_${cluster_version}"
     fi
     mkdir -p ${_hub_conf_path}
     touch ${_hub_conf_path}/kubeconfig

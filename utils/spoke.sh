@@ -6,10 +6,10 @@ function generate_spoke_context() {
     # Init the spoke cluster context path
     _cluster_type=$1
     if [[ $_cluster_type == "customer" ]]; then
-        _spoke_context_path="env_context/${_cluster_type}"
+        _spoke_context_path="env-context/${_cluster_type}"
     else
         _cluster_version=$2
-        _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
+        _spoke_context_path="env-context/${_cluster_type}_${_cluster_version}"
     fi
 
     mkdir -p ${_spoke_context_path}
@@ -98,10 +98,10 @@ function get_spoke_cluster_name() {
     # Init the spoke cluster context path
     _cluster_type=$1
     if [[ $_cluster_type == "customer" ]]; then
-        _spoke_context_path="env_context/${_cluster_type}"
+        _spoke_context_path="env-context/${_cluster_type}"
     else
         _cluster_version=$2
-        _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
+        _spoke_context_path="env-context/${_cluster_type}_${_cluster_version}"
     fi
     # Get the cluster name from clusterclaim, and the clusterclaim was introduced in v2.2.
     KUBECONFIG=${_spoke_context_path}/imported_kubeconfig oc get clusterclaim id.k8s.io -o jsonpath={.spec.value} > ${_spoke_context_path}/managed_cluster_name
@@ -111,10 +111,10 @@ function get_spoke_cluster_console() {
     # Init the spoke cluster context path
     _cluster_type=$1
     if [[ $_cluster_type == "customer" ]]; then
-        _spoke_context_path="env_context/${_cluster_type}"
+        _spoke_context_path="env-context/${_cluster_type}"
     else
         _cluster_version=$2
-        _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
+        _spoke_context_path="env-context/${_cluster_type}_${_cluster_version}"
     fi
     echo $(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get clusterclaim consoleurl.cluster.open-cluster-management.io -o jsonpath={.spec.value})
 }
@@ -123,10 +123,10 @@ function get_spoke_cluster_version() {
     # Init the spoke cluster context path
     _cluster_type=$1
     if [[ $_cluster_type == "customer" ]]; then
-        _spoke_context_path="env_context/${_cluster_type}"
+        _spoke_context_path="env-context/${_cluster_type}"
     else
         _cluster_version=$2
-        _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
+        _spoke_context_path="env-context/${_cluster_type}_${_cluster_version}"
     fi
 
     _product_type=$(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get clusterclaim product.open-cluster-management.io -o jsonpath={.spec.value})
@@ -141,10 +141,10 @@ function get_spoke_cluster_platform() {
     # Init the spoke cluster context path
     _cluster_type=$1
     if [[ $_cluster_type == "customer" ]]; then
-        _spoke_context_path="env_context/${_cluster_type}"
+        _spoke_context_path="env-context/${_cluster_type}"
     else
         _cluster_version=$2
-        _spoke_context_path="env_context/${_cluster_type}_${_cluster_version}"
+        _spoke_context_path="env-context/${_cluster_type}_${_cluster_version}"
     fi
     echo $(KUBECONFIG=$_spoke_context_path/imported_kubeconfig oc get clusterclaim platform.open-cluster-management.io -o jsonpath={.spec.value})
 }

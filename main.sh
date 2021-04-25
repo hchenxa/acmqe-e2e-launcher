@@ -58,7 +58,7 @@ if [[ $USER_ENV == "true" ]]; then
 
     source utils/gen_report.sh
     generate_md results/${TIME_STAMP}/customer/tmp results/${TIME_STAMP}/customer/report.md $TEST_SNAPSHOT "Regression" "user" $_acm_version $_acm_console $_spoke_cluster_version $_spoke_cluster_console
-    push_report results/${TIME_STAMP}
+    push_report results/${TIME_STAMP} "customer"
 else
     get_supported_type_from_file $ACM_VERSION
     OLD_IFS="$IFS"
@@ -114,6 +114,6 @@ else
 
         source utils/gen_report.sh
         generate_md results/${TIME_STAMP}/${type}-${ACM_VERSION}/tmp results/${TIME_STAMP}/${type}-${ACM_VERSION}/report.md $TEST_SNAPSHOT "Regression" $type $_acm_version $_acm_console $_spoke_cluster_version $_spoke_cluster_console
-        push_report results/${TIME_STAMP}
+        push_report "results/${TIME_STAMP}" "${type}" "${ACM_VERSION}"
     done
 fi

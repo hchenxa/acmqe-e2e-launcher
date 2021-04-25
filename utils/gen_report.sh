@@ -22,7 +22,13 @@ function push_report() {
     git clone --single-branch --branch main https://${GITHUB_TOKEN}@github.com/hchenxa/report.git /tmp/acm_regression/report
     cp -r $_report_location /tmp/acm_regression/report
     pushd /tmp/acm_regression/report
-    git add $(basename $_report_location)
+    if [[ $2 == "customer" ]]; then
+        git add $(basename $_report_location)/customer/report.md
+    else
+        _cluster_type=$2
+        _cluster_version=$3
+        git add $(basename $_report_location)/${_cluster_type}-${_cluster_version}/report.md
+    fi
     git status
     git config --global user.email "huichen@redhat.com"
     git config --global user.name "hchenxa"

@@ -109,6 +109,7 @@ function run_test() {
         "CLUSTER_LIFECYCLE")
             ;;
         "APP_UI")
+
             ;;
         "APP_BACKEND")
             sudo $DOCKER run \

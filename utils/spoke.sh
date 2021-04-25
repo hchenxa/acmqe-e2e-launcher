@@ -18,7 +18,6 @@ function generate_spoke_context() {
     # Generate the spoke cluster context
     if [[ ! -z $SPOKE_API_URL && ! -z $SPOKE_TOKEN ]]; then
         KUBECONFIG="${_spoke_context_path}/imported-kubeconfig" oc login --insecure-skip-tls-verify=true --token=$SPOKE_TOKEN $SPOKE_API_URL
-
     elif [[ ! -z $SPOKE_API_URL && ! -z $SPOKE_USERNAME && ! -z $SPOKE_PASSWORD ]]; then
         KUBECONFIG="${_spoke_context_path}/imported-kubeconfig" oc login --insecure-skip-tls-verify=true -u $SPOKE_USERNAME -p $SPOKE_PASSWORD $SPOKE_API_URL
     else

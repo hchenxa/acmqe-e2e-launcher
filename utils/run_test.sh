@@ -92,14 +92,18 @@ function run_test() {
             ;;
         "CONSOLE_UI")
            ## The console-ui-tests can be run 2.0.x and 2.1.x
-            sudo $DOCKER run \
-            --volume $result_path/results:/results \
-            --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
-            --volume ${config_path}/imported-kubeconfig:/opt/.kube/import-kubeconfig \
-            --env TEST_GROUP=e2e \
-            --env BROWSER='chrome' \
-            --name console-ui-tests-${TIME_STAMP} \
-            quay.io/open-cluster-management/console-ui-tests:$TEST_SNAPSHOT
+            if [[ $ACM_VERSION =~2.0 || $ACM_VERSION =~2.1 ]]; then
+                sudo $DOCKER run \
+                --volume $result_path/results:/results \
+                --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
+                --volume ${config_path}/imported-kubeconfig:/opt/.kube/import-kubeconfig \
+                --env TEST_GROUP=e2e \
+                --env BROWSER='chrome' \
+                --name console-ui-tests-${TIME_STAMP} \
+                quay.io/open-cluster-management/console-ui-tests:$TEST_SNAPSHOT
+            else
+                echo "The console ui tests only can be run 2.0 and 2.1"
+            fi
 
             for f in $result_path/results/*; do
                 mv "$f" "$result_path/tmp/console-ui-${TIME_STAMP}-$(basename $f)"
@@ -109,6 +113,33 @@ function run_test() {
         "CLUSTER_LIFECYCLE")
             ;;
         "APP_UI")
+            sudo $DOCKER run \
+            --volume ${result_path}/results:/results \ 
+            --volume ${config_path}/imported-kubeconfig:/usr/src/app/tests/cypress/config/import-kubeconfig \
+            --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
+            --env CYPRESS_TEST_MODE="functional" \
+            --env CYPRESS_OC_IDP="$(get_idprovider $_env_type $ACM_VERSION)" \
+            --env CYPRESS_OC_CLUSTER_USER="${HUB_USERNAME}" \
+            --env CYPRESS_OC_CLUSTER_PASS="${HUB_PASSWORD}" \
+            --env CYPRESS_OC_CLUSTER_URL="${OCP_URL}" \
+            --env CYPRESS_BASE_URL=https://$(get_acm_console $_env_type) \
+            --env GITHUB_USER="${GITHUB_USER}" \
+            --env GITHUB_TOKEN="${GITHUB_TOKEN}" \
+            --env GITHUB_PRIVATE_URL=https://github.com/open-cluster-management/app-ui-e2e-private-git \
+            --env OBJECTSTORE_PRIVATE_URL="${OBJECTSTORE_PRIVATE_URL}" \
+            --env OBJECTSTORE_ACCESS_KEY="${OBJECTSTORE_ACCESS_KEY}" \
+            --env OBJECTSTORE_SECRET_KEY="${OBJECTSTORE_SECRET_KEY}" \
+            --env HELM_PRIVATE_URL=https://raw.githubusercontent.com/open-cluster-management/app-ui-e2e-private-helm/master \
+            --env HELM_USERNAME="${GITHUB_USER}" \
+            --env HELM_PASSWORD="${GITHUB_TOKEN}" \
+            --env HELM_CHART_NAME=mychart \
+            --env BROWSER="chrome" \
+            --name application-ui-tests-${TIME_STAMP} \
+            quay.io/open-cluster-management/application-ui-tests:${TEST_SNAPSHOT}
+
+            for f in $result_path/results/*; do
+                mv "$f" "$result_path/tmp/app-ui-${TIME_STAMP}-$(basename $f)"
+            done
 
             ;;
         "APP_BACKEND")

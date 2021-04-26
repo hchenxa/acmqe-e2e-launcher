@@ -92,6 +92,18 @@ options:
     baseURL: https://multicloud-console.apps.${baseDomain}
 EOF
             ;;
+        "APP_UI")
+          cat << EOF > ${config_path}/${test_type}/options.yaml
+options:
+  hub:
+    baseDomain: $baseDomain
+    hubClusterURL: https://api.${baseDomain}:6443
+    user: $username
+    password: $password
+    baseURL: https://multicloud-console.apps.${baseDomain}
+    idp: $id_provider
+EOF
+            ;;
         "CONSOLE_UI")
           cat << EOF > ${config_path}/${test_type}/options.yaml
 options:

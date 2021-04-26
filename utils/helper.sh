@@ -25,10 +25,10 @@ function get_acm_version() {
     # Used to get the acm version
     cluster_type=$1
     if [[ $cluster_type == "customer" ]]; then
-        acm_package=$(KUBECONFIG=env_context/customer/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $2}')
+        acm_package=$(KUBECONFIG=env-context/customer/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $2}')
     else
         acm_version=$2
-        acm_package=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $2}')
+        acm_package=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $2}')
     fi
     echo ${acm_package#*advanced-cluster-management.}
 }
@@ -37,10 +37,10 @@ function get_acm_console() {
     # Used to get the acm console
     cluster_type=$1
     if [[ $cluster_type == "customer" ]]; then
-        acm_console=$(KUBECONFIG=env_context/customer/kubeconfig oc get route --all-namespaces | grep multicloud-console | awk '{print $3}')
+        acm_console=$(KUBECONFIG=env-context/customer/kubeconfig oc get route --all-namespaces | grep multicloud-console | awk '{print $3}')
     else
         acm_version=$2
-        acm_console=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route --all-namespaces | grep multicloud-console | awk '{print $3}')
+        acm_console=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get route --all-namespaces | grep multicloud-console | awk '{print $3}')
     fi
     echo ${acm_console}
 }
@@ -60,10 +60,10 @@ function get_basedomain() {
     # Used to get the cluster base domain
     cluster_type=$1
     if [[ $cluster_type == "customer" ]]; then
-        route_console=$(KUBECONFIG=env_context/customer/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+        route_console=$(KUBECONFIG=env-context/customer/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
     else
         acm_version=$2
-        route_console=$(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
+        route_console=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get route -n openshift-console console -o jsonpath={.spec.host})
     fi
     echo ${route_console#*apps.}
 }
@@ -71,19 +71,19 @@ function get_basedomain() {
 function get_idprovider() {
     cluster_type=$1
     if [[ $cluster_type == "customer" ]]; then
-        echo $(KUBECONFIG=env_context/customer/kubeconfig oc whoami)
+        echo $(KUBECONFIG=env-context/customer/kubeconfig oc whoami)
     else
         acm_version=$2
-        echo $(KUBECONFIG=env_context/${cluster_type}_${acm_version}/kubeconfig oc whoami)
+        echo $(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc whoami)
     fi
 }
 
 function get_config_path() {
     cluster_type=$1
     if [[ $cluster_type == "customer" ]]; then
-        echo "env_context/customer"
+        echo "env-context/customer"
     else
         acm_version=$2
-        echo "env_context/${cluster_type}_${acm_version}"
+        echo "env-context/${cluster_type}-${acm_version}"
     fi
 }

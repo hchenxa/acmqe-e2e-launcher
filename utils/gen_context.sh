@@ -7,15 +7,19 @@ function generate_context() {
     url=$3
     env_type=$4
     if [[ $env_type == "customer" ]]; then
-        _hub_conf_path="env_context/${env_type}"
+        _hub_conf_path="env-context/${env_type}"
     else
         cluster_version=$5
-        _hub_conf_path="env_context/${env_type}_${cluster_version}"
+        _hub_conf_path="env-context/${env_type}-${cluster_version}"
     fi
     mkdir -p ${_hub_conf_path}
     touch ${_hub_conf_path}/kubeconfig
     KUBECONFIG=${_hub_conf_path}/kubeconfig oc login --insecure-skip-tls-verify=true -u $username -p $password $url
-    echo "${_hub_conf_path}/kubeconfig"
+    if [[ $? != 0 ]]; then
+        exit 1
+    else
+        echo "${_hub_conf_path}/kubeconfig"
+    fi
 }
 
 function generate_context_withtoken() {
@@ -23,15 +27,19 @@ function generate_context_withtoken() {
     url=$2
     env_type=$3
     if [[ $env_type == "customer" ]]; then
-        _hub_conf_path="env_context/${env_type}"
+        _hub_conf_path="env-context/${env_type}"
     else
         cluster_version=$4
-        _hub_conf_path="env_context/${env_type}_${cluster_version}"
+        _hub_conf_path="env-context/${env_type}-${cluster_version}"
     fi
     mkdir -p ${_hub_conf_path}
     touch ${_hub_conf_path}/kubeconfig
     KUBECONFIG=${_hub_conf_path}/kubeconfig oc login --insecure-skip-tls-verify=true --token=$ocp_token $url
-    echo "${_hub_conf_path}/kubeconfig"    
+    if [[ $? != 0 ]]; then
+        exit 1
+    else
+        echo "${_hub_conf_path}/kubeconfig"
+    fi
 }
 
 function generate_options() {
@@ -59,6 +67,7 @@ EOF
         "KUI")
             cat << EOF > ${config_path}/${test_type}/options.yaml
 options:
+  identityProvider: $id_provider
   hub:
     baseDomain: $baseDomain
     user: $username

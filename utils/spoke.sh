@@ -32,9 +32,9 @@ function generate_spoke_context() {
         else
             _secret_name=$(KUBECONFIG=${_spoke_context_path}/kubeconfig oc get secret -n $_spoke_cluster | awk '{print $1}' | grep "^$_spoke_cluster.*admin-kubeconfig$")
             if [[ $(uname -s) == "Darwin" ]]; then
-                KUBECONFIG=${_spoke_context_path}/kubeconfig oc get secret -n $_spoke_cluster $secret_name --template={{.data.kubeconfig}} | base64 -D > ${_spoke_context_path}/imported_kubeconfig
+                KUBECONFIG=${_spoke_context_path}/kubeconfig oc get secret -n $_spoke_cluster $_secret_name --template={{.data.kubeconfig}} | base64 -D > ${_spoke_context_path}/imported_kubeconfig
             else
-                KUBECONFIG=${_spoke_context_path}/kubeconfig oc get secret -n $_spoke_cluster $secret_name --template={{.data.kubeconfig}} | base64 -d > ${_spoke_context_path}/imported_kubeconfig
+                KUBECONFIG=${_spoke_context_path}/kubeconfig oc get secret -n $_spoke_cluster $_secret_name --template={{.data.kubeconfig}} | base64 -d > ${_spoke_context_path}/imported_kubeconfig
             fi
             echo "apiVersion: v1" >> ${_spoke_context_path}/imported_kubeconfig            
         fi

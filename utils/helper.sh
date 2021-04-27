@@ -33,6 +33,18 @@ function get_acm_version() {
     echo ${acm_package#*advanced-cluster-management.}
 }
 
+function get_installed_namespace() {
+    # Used to get the acm installed namespace
+    cluster_type=$1
+    if [[ $cluster_type == "customer" ]]; then
+        _acm_installed_ns=$(KUBECONFIG=env-context/customer/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $1}')
+    else
+        acm_version=$2
+        _acm_installed_ns=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get csv --all-namespaces | grep advanced-cluster-management | awk '{print $1}')
+    fi
+    echo ${_acm_installed_ns}
+}
+
 function get_acm_console() {
     # Used to get the acm console
     cluster_type=$1

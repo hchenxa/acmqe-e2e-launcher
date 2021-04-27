@@ -92,7 +92,7 @@ function run_test() {
             ;;
         "CONSOLE_UI")
            ## The console-ui-tests can be run 2.0.x and 2.1.x
-            if [[ $ACM_VERSION =~2.0 || $ACM_VERSION =~2.1 ]]; then
+            if [[ $ACM_VERSION =~ 2.0 || $ACM_VERSION =~ 2.1 ]]; then
                 sudo $DOCKER run \
                 --volume $result_path/results:/results \
                 --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
@@ -114,7 +114,7 @@ function run_test() {
             ;;
         "APP_UI")
             sudo $DOCKER run \
-            --volume ${result_path}/results:/results \ 
+            --volume ${result_path}/results:/results \
             --volume ${config_path}/imported-kubeconfig:/usr/src/app/tests/cypress/config/import-kubeconfig \
             --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
             --env CYPRESS_TEST_MODE="functional" \

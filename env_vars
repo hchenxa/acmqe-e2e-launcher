@@ -6,6 +6,8 @@ export USER_ENV=${USER_ENV:-true}
 # This variable was used to determin the Snapshot version which you want to apply in your environment.
 export TEST_SNAPSHOT=${TEST_SNAPSHOT:-latest}
 
+USER_ENV=$(echo -n $USER_ENV | tr 'A-Z' 'a-z')
+
 # This variable was used to determine the ACM VERSION for testing.
 if [[ $USER_ENV == "false" ]]; then
     export ACM_VERSION=${ACM_VERSION:-2.3}

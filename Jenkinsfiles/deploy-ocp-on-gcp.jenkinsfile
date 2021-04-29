@@ -1,0 +1,97 @@
+pipeline {
+    agent { label "rhacm-run" }
+    environment {
+        GCP_PROJECT                     = "gc-acm-test"
+        PLATFORM                        = "gcp"
+        GCP_SERVICE_ACCOUNT_EMAIL       = "huichen@gc-acm-test.iam.gserviceaccount.com"
+        GCP_REGION                      = "us-east1"
+        OPENSHIFT_BASE_DOMAIN           = "gcp.dev09.red-chesterfield.com"
+        GIT_AUTH_TOKEN                  = credentials("GITHUB_TOKEN")
+        GCP_AUTH_KEY_FILE               = credentials("gcp-auth-key-file")
+        OPENSHIFT_INSTALL_PULL_SECRET   = credentials("ocp-pull-secret")
+    }
+    stages {
+        stage('Clone') {
+            steps {
+                sh ''' #!/bin/bash
+                    if [[ -d bootstrap ]]; then
+                        rm -rf bootstrap
+                    fi
+                    git clone https://$GIT_AUTH_TOKEN@github.com/open-cluster-management/bootstrap.git
+                ''' 
+            }
+        }
+        stage('Prepare Tools') {
+            steps {
+                sh ''' #!/bin/bash
+                    command -v python3 &>/dev/null
+                    if [[ $? -ne 0 ]]; then
+                        sudo dnf install -y python3 python3-pip
+                    fi
+                    sudo dnf install -y epel-release
+                    sudo dnf install -y ansible* &> /dev/null
+
+                    if [[ ! -f ${HOME}/.ssh/id_rsa ]]; then
+                        ssh-keygen -t rsa -b 4096 -f ${HOME}/.ssh/id_rsa -q -N ""
+                    fi
+                ''' 
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh ''' #!/bin/bash
+echo $(pwd)
+cp $OPENSHIFT_INSTALL_PULL_SECRET ${WORKSPACE}/bootstrap/
+cp $GCP_AUTH_KEY_FILE ${WORKSPACE}/bootstrap/
+cd ${WORKSPACE}/bootstrap
+cat << EOF > ${WORKSPACE}/bootstrap/local.rc
+export PLATFORM=${PLATFORM}
+export GCP_SERVICE_ACCOUNT_EMAIL=${GCP_SERVICE_ACCOUNT_EMAIL}
+export GCP_AUTH_KEY_FILE="${WORKSPACE}/bootstrap/gc-acm-test-920e57ad89f9.json"
+export GCP_PROJECT=${GCP_PROJECT}
+export GCP_REGION="us-east1"
+export OPENSHIFT_INSTALL_PULL_SECRET='$(cat ${WORKSPACE}/bootstrap/pull-secret.txt)'
+export OCM_INSTALL=false
+export OPENSHIFT_CLUSTER_NAME=${OPENSHIFT_CLUSTER_NAME}
+export OPENSHIFT_BASE_DOMAIN=${OPENSHIFT_BASE_DOMAIN}
+export OPENSHIFT_INSTALL=true
+export OPENSHIFT_CLEANUP=false
+EOF
+
+cat ${WORKSPACE}/bootstrap/local.rc
+
+./start.sh
+                '''                
+            }
+        }
+        stage('Test') {
+            steps {
+                sh '''
+                    env
+                '''
+            }
+        }
+        stage('Destroy') {
+            steps {
+                sh ''' #!/bin/bash
+echo $(pwd)
+cd ${WORKSPACE}/bootstrap
+cat << EOF > ${WORKSPACE}/bootstrap/local.rc
+export PLATFORM=${PLATFORM}
+export GCP_SERVICE_ACCOUNT_EMAIL=${GCP_SERVICE_ACCOUNT_EMAIL}
+export GCP_AUTH_KEY_FILE="${WORKSPACE}/bootstrap/gc-acm-test-920e57ad89f9.json"
+export GCP_PROJECT=${GCP_PROJECT}
+export GCP_REGION="us-east1"
+export OPENSHIFT_INSTALL_PULL_SECRET='$(cat ${WORKSPACE}/bootstrap/pull-secret.txt)'
+export OCM_INSTALL=false
+export OPENSHIFT_CLUSTER_NAME=${OPENSHIFT_CLUSTER_NAME}
+export OPENSHIFT_BASE_DOMAIN=${OPENSHIFT_BASE_DOMAIN}
+export OPENSHIFT_INSTALL=false
+export OPENSHIFT_CLEANUP=true
+EOF
+./start.sh
+                '''
+            }
+        }
+    }
+}

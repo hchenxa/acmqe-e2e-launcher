@@ -25,25 +25,31 @@
             "image": "cluster-lifecycle-e2e"
         },
         {
-            "repo_path": "https://github.com/open-cluster-management/mcm-kui-tests",
+            "repo_path": "https://github.com/open-cluster-management/clc-ui-e2e",
+            "enabled": false,
+            "squad": "clc",
+            "image": "cluster-lifecycle-ui"
+        },
+        {
+            "repo_path": "https://github.com/open-cluster-management/kui-web-terminal",
             "enabled": false,
             "squad": "kui",
             "image": "kui-web-terminal-tests"
         },
         {
-            "repo_path": "",
+            "repo_path": "https://github.com/open-cluster-management/grc-ui",
             "enabled": false,
             "squad": "grc",
             "image": "grc-ui-tests"
         },
         {
-            "repo_path": "",
+            "repo_path": "https://github.com/open-cluster-management/governance-policy-framework",
             "enabled": false,
             "squad": "grc",
             "image": "grc-policy-framework-tests"
         },
         {
-            "repo_path": "",
+            "repo_path": "https://github.com/open-cluster-management/console-ui/tree/master/tests",
             "enabled": false,
             "squad": "ui",
             "image": "console-ui-tests"

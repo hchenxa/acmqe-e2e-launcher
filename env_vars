@@ -80,8 +80,11 @@ export GEN_REPORT_ONLY=${GEN_REPORT_ONLY:-false}
 # This variable was used to push the report to github repo
 export GITHUB_TOKEN=${GITHUB_TOKEN:-}
 
-# This variable was used in grc ui testing, hardcode the value here.
+# This variable was used in grc ui testing, the default value is acmqe and user can update this value by setting the variable environment.
 export RBAC_PASS=${RBAC_PASS:-"acmqe"}
 
 # This varialbe was used to generate the timestamp to save the test report. 
 export TIME_STAMP=$(date "+%Y%m%d%H%M")
+
+# This variable was used to generate the report, the default value is 10.
+export TEST_FILES_COUNT=${TEST_FILES_COUNT:-10}

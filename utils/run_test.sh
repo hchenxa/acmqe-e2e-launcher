@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source utils/observability-utils.sh
+
 function run_test() {
 
     _test_case=$1
@@ -157,15 +159,33 @@ function run_test() {
 
             ;;
         "OBSERVABILITY")
-            sudo $DOCKER run \
-            --net host \
-            --volume ${result_path}/results:/results \
-            --volume ${config_path}/kubeconfig:/opt/.kube/config \
-            --volume ${config_path}/${_test_case}/resources:/resources \
-            --name observability-e2e-test-${TIME_STAMP} \
-            --env SKIP_INSTALL_STEP=true \
-            --env SKIP_UNINSTALL_STEP=true \
-            quay.io/open-cluster-management/observability-e2e-test:${TEST_SNAPSHOT}
+            if [[ $_env_type == "customer" ]]; then
+                _mco_enabled=$(get_mco_cr $_env_type $_cluster_version)
+            else
+                _mco_enabled=$(get_mco_cr $_env_type $_cluster_version)
+            fi
+
+            if [[ $_mco_enabled == "true" ]]; then
+                sudo $DOCKER run \
+                --net host \
+                --volume ${result_path}/results:/results \
+                --volume ${config_path}/kubeconfig:/opt/.kube/config \
+                --volume ${config_path}/${_test_case}/resources:/resources \
+                --name observability-e2e-test-${TIME_STAMP} \
+                --env SKIP_INSTALL_STEP=true \
+                --env SKIP_UNINSTALL_STEP=true \
+                quay.io/open-cluster-management/observability-e2e-test:${TEST_SNAPSHOT}
+            else
+                sudo $DOCKER run \
+                --net host \
+                --volume ${result_path}/results:/results \
+                --volume ${config_path}/kubeconfig:/opt/.kube/config \
+                --volume ${config_path}/${_test_case}/resources:/resources \
+                --name observability-e2e-test-${TIME_STAMP} \
+                --env SKIP_INSTALL_STEP=false \
+                --env SKIP_UNINSTALL_STEP=false \
+                quay.io/open-cluster-management/observability-e2-test:${TEST_SNAPSHOT}
+            fi
 
             for f in $result_path/results/*; do
                 mv "$f" "$result_path/tmp/observability-${TIME_STAMP}-$(basename $f)"

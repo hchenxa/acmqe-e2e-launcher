@@ -4,7 +4,11 @@
 export USER_ENV=${USER_ENV:-true}
 
 # This variable was used to determin the Snapshot version which you want to apply in your environment.
-export TEST_SNAPSHOT=${TEST_SNAPSHOT:-latest}
+export TEST_SNAPSHOT=${TEST_SNAPSHOT:-}
+if [[ -z $TEST_SNAPSHOT ]]; then
+    echo "Please provide the TEST_SNAPSHOT to run the automation test"
+    exit 1
+fi
 
 USER_ENV=$(echo -n $USER_ENV | tr 'A-Z' 'a-z')
 
@@ -74,11 +78,11 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# This variable was used for current report test, will be removed later.
-export GEN_REPORT_ONLY=${GEN_REPORT_ONLY:-false}
-
-# This variable was used to push the report to github repo
-export GITHUB_TOKEN=${GITHUB_TOKEN:-}
+# These variables were used to push the report to github repo
+export SKIP_PUSH_REPORT=${SKIP_PUSH_REPORT:-false}
+if [[ $SKIP_PUSH_REPORT == "false" ]]; then
+    export GITHUB_TOKEN=${GITHUB_TOKEN:-}
+fi
 
 # This variable was used in grc ui testing, the default value is acmqe and user can update this value by setting the variable environment.
 export RBAC_PASS=${RBAC_PASS:-"acmqe"}

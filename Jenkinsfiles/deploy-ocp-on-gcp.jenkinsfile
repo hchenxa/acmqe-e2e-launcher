@@ -28,9 +28,11 @@ pipeline {
                     if [[ $? -ne 0 ]]; then
                         sudo dnf install -y python3 python3-pip
                     fi
-                    sudo dnf install -y epel-release
-                    sudo dnf install -y ansible* &> /dev/null
-
+                    command -v ansible-playbook &>/dev/null
+                    if [[ $? -ne 0 ]]; then
+                        sudo dnf install -y epel-release
+                        sudo dnf install -y ansible* &> /dev/null
+                    fi
                     if [[ ! -f ${HOME}/.ssh/id_rsa ]]; then
                         ssh-keygen -t rsa -b 4096 -f ${HOME}/.ssh/id_rsa -q -N ""
                     fi
@@ -56,6 +58,7 @@ export OPENSHIFT_CLUSTER_NAME=${OPENSHIFT_CLUSTER_NAME}
 export OPENSHIFT_BASE_DOMAIN=${OPENSHIFT_BASE_DOMAIN}
 export OPENSHIFT_INSTALL=true
 export OPENSHIFT_CLEANUP=false
+export OPENSHIFT_VERSION=${OPENSHIFT_VERSION}
 EOF
 
 cat ${WORKSPACE}/bootstrap/local.rc
@@ -88,6 +91,7 @@ export OPENSHIFT_CLUSTER_NAME=${OPENSHIFT_CLUSTER_NAME}
 export OPENSHIFT_BASE_DOMAIN=${OPENSHIFT_BASE_DOMAIN}
 export OPENSHIFT_INSTALL=false
 export OPENSHIFT_CLEANUP=true
+export OPENSHIFT_VERSION=${OPENSHIFT_VERSION}
 EOF
 ./start.sh
                 '''

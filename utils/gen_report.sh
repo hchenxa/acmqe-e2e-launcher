@@ -23,16 +23,20 @@ function push_report() {
     cp -r $_report_location /tmp/acm_regression/report
     pushd /tmp/acm_regression/report
     if [[ $2 == "customer" ]]; then
-        git add $(basename $_report_location)/customer/report.md
+        _push_url="$(basename $_report_location)/customer/report.md"
     else
         _cluster_type=$2
         _cluster_version=$3
-        git add $(basename $_report_location)/${_cluster_type}-${_cluster_version}/report.md
+        _push_url="$(basename $_report_location)/${_cluster_type}-${_cluster_version}/report.md"
     fi
+    git add $_push_url
     git status
     git config --global user.email "huichen@redhat.com"
     git config --global user.name "hchenxa"
     git diff-index --quiet HEAD || git commit -am "Save Regression Results ${_report_location}"
     git push
     popd
+    echo "####################################"
+    echo "To view the report, please access the URL: https://github.com/hchenxa/report/blob/main/$_push_url"
+    echo "####################################"
 }

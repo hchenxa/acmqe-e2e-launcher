@@ -184,7 +184,7 @@ function run_test() {
                 --name observability-e2e-test-${TIME_STAMP} \
                 --env SKIP_INSTALL_STEP=false \
                 --env SKIP_UNINSTALL_STEP=false \
-                quay.io/open-cluster-management/observability-e2-test:${TEST_SNAPSHOT}
+                quay.io/open-cluster-management/observability-e2e-test:${TEST_SNAPSHOT}
             fi
 
             for f in $result_path/results/*; do

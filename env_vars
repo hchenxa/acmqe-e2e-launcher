@@ -10,7 +10,7 @@ if [[ -z $TEST_SNAPSHOT ]]; then
     exit 1
 fi
 
-USER_ENV=$(echo -n $USER_ENV | tr 'A-Z' 'a-z')
+USER_ENV=$(echo $USER_ENV | tr 'A-Z' 'a-z')
 
 # This variable was used to determine the ACM VERSION for testing.
 if [[ $USER_ENV == "false" ]]; then

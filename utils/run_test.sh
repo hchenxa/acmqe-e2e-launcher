@@ -31,6 +31,7 @@ function run_test() {
             --volume ${config_path}/kubeconfig:/opt/.kube/config \
             --volume ${config_path}/imported-kubeconfig:/opt/.kube/import-kubeconfig \
             --volume ${config_path}/${_test_case}/options.yaml:/resources/options.yaml \
+            --volume ${config_path}/${_test_case}/search-cypress.json:/cypress.json \
             --volume $result_path/results:/results \
             --name search-e2e-${TIME_STAMP} \
             quay.io/open-cluster-management/search-e2e:$TEST_SNAPSHOT

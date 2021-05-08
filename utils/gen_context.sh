@@ -63,6 +63,46 @@ options:
     user: $username
     password: $password
 EOF
+            # Hack to make sure the search can run in non kube:admin environment
+            cat << EOF > ${config_path}/${test_type}/search-cypress.json
+{
+  "testFiles": "**/*.spec.js",
+  "chromeWebSecurity": false,
+  "defaultCommandTimeout": 10000,
+  "integrationFolder": "tests/cypress/tests",
+  "ignoreTestFiles": ["welcomePage.spec.js"],
+  "fixturesFolder": "tests/cypress/fixtures",
+  "pluginsFile": "tests/cypress/plugins/index.js",
+  "pageLoadTimeout": 90000,
+  "numTestsKeptInMemory": 10,
+  "screenshotsFolder" : "results/screenshots",
+  "supportFile": "tests/cypress/support/index.js",
+  "videosFolder": "results/videos",
+  "videoUploadOnPasses": false,
+  "watchForFileChanges": true,
+  "nodeVersion": "system",
+  "env": {
+    "OC_IDP": "$id_provider"
+  },
+  "reporter": "cypress-multi-reporters",
+  "reporterOptions": {
+    "reporterEnabled": "mochawesome, mocha-junit-reporter",
+    "mochawesomeReporterOptions": {
+      "reportDir": "results/json",
+      "reportFilename": "mochawesome-report.json",
+      "overwrite": false,
+      "html": false,
+      "json": true
+    },
+    "mochaJunitReporterReporterOptions": {
+      "mochaFile": "results/cypress-[hash].xml"
+    }
+  },
+  "retries": 2,
+  "viewportHeight": 1050,
+  "viewportWidth": 1680
+}
+EOF
             ;;
         "KUI")
             cat << EOF > ${config_path}/${test_type}/options.yaml

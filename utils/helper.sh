@@ -21,6 +21,18 @@ function get_acm_route_from_file() {
     echo $(jq -r ".acm_versions[]|select(.version == $acm_version)|.envs[]|select(.type== "$cluster_type")|acm_route" config/environment.json)   
 }
 
+function get_provider_type() {
+    # Used to get the ocp cluster cloud provider, and the return value will be GCP, AWS and so on.
+    cluster_type=$1
+    if [[ $cluster_type == "customer" ]]; then
+        _provider_type=$(KUBECONFIG=env-context/customer/kubeconfig oc get infrastructures.config.openshift.io cluster -o jsonpath={.status.platform})
+    else
+        acm_version=$2
+        _provider_type=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get infrastructures.config.openshift.io cluster -o jsonpath={.status.platform})
+    fi
+    echo ${_provider_type}
+}
+
 function get_acm_version() {
     # Used to get the acm version
     cluster_type=$1

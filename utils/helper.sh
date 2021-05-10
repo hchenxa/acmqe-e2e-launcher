@@ -84,13 +84,21 @@ function get_idprovider() {
     cluster_type=$1
     if [[ $cluster_type == "customer" ]]; then
         _user_name=$(KUBECONFIG=env-context/customer/kubeconfig oc whoami)
+        if [[ $_user_name == "kube:admin" ]]; then
+          _idp=kubeadmin
+        else
         _user_id=$(KUBECONFIG=env-context/customer/kubeconfig oc get users $_user_name -o jsonpath={.metadata.uid})
         _idp=$(KUBECONFIG=env-context/customer/kubeconfig oc get identities | grep $_user_id | awk '{print $2}')
+        fi
     else
         acm_version=$2
         _user_name=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc whoami)
+        if [[ $_user_name == "kube:admin" ]]; then
+          _idp=kubeadmin
+        else
         _user_id=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get users $_user_name -o jsonpath={.metadata.uid})
         _idp=$(KUBECONFIG=env-context/${cluster_type}-${acm_version}/kubeconfig oc get identities | grep $_user_id | awk '{print $2}')
+        fi
     fi
     echo $_idp
 }

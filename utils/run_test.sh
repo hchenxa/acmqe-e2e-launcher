@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 source utils/observability-utils.sh
+source utils/spoke.sh
 
 function run_test() {
 
@@ -78,6 +79,7 @@ function run_test() {
 
             ;;
         "GRC_FRAMEWORK")
+            get_spoke_cluster_name $_env_type
             _managed_cluster_name=$(cat ${config_path}/managed_cluster_name)
             sudo $DOCKER run \
             --network host \
